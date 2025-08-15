@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Image filtering
+alpine-sentry-468713-i3-42a0e4316ef1.json
