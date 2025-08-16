@@ -4,6 +4,7 @@ import axios from "axios";
 import ImageCard from "./ImageCard";
 import { addoneimage } from "../utils/imageSlice";
 import { useDispatch } from "react-redux";
+import filterImage from "../utils/imageFilter";
 
 const NewImage = () => {
 	const [selectedFile, setSelectedFile] = useState(null);
@@ -14,6 +15,7 @@ const NewImage = () => {
 	const [categories, setCategories] = useState([]);
 	const [description, setDescription] = useState("");
 	const [imageId, setImageId] = useState("");
+	const [isImageValid, setIsImageValid] = useState(true);
 	const dispatch = useDispatch();
 	const categoryChanged = (value) => {
 		value.length < 21 && setCategory(value);
@@ -32,15 +34,27 @@ const NewImage = () => {
 	};
 
 	const handleFileChange = (event) => {
-		setSelectedFile(event.target.files[0]);
-		setMessage("");
-		setImageUrl("");
+		// setIsImageValid(filterImage(event.target.files[0]));
+		// if (isImageValid) {
+		// 	setSelectedFile(event.target.files[0]);
+		// 	setMessage("");
+		// 	setImageUrl("");
+		// } else {
+		// 	setMessage("Sorry. This image is not allowed to add to this site.");
+		// 	setImageUrl("");
+		// }
+		setIsImageValid(true);
 	};
 
 	const handleSubmit = async () => {
 		try {
 			if (!selectedFile) {
 				setMessage("Please select upload an image");
+				return;
+			}
+
+			if (!isImageValid) {
+				setMessage("Sorry. This image is not allowed to add to this site.");
 				return;
 			}
 

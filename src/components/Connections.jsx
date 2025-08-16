@@ -16,6 +16,29 @@ const Connections = ({ status }) => {
 		(c) => c.status === status
 	);
 	console.log(connecs);
+
+	const saveVisitedUserInformation = async () => {
+		try {
+			const siteUrl = window.location.href;
+			const res = await axios.post(
+				BASE_URL + "/lastvisited/save",
+				{ siteUrl: siteUrl },
+				{ withCredentials: true }
+			);
+			console.log("site visited information: " + res);
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
+	useEffect(() => {
+		try {
+			saveVisitedUserInformation();
+		} catch (err) {
+			console.log(err);
+		}
+	}, []);
+
 	return (
 		<div className="w-full m-10">
 			<ul className="list bg-base-100 rounded-box shadow-md">

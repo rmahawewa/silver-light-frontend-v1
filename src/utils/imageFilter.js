@@ -21,13 +21,29 @@ async function isAttractiveToChildren(imagePath) {
 			propertiesResult.imagePropertiesAnnotation.dominantColors.colors;
 
 		// Check for child-attractive labels
+
 		const childFriendlyLabels = [
-			"toy",
-			"cartoon",
-			"game",
+			"earth",
+			"sky",
+			"water",
+			"fire",
+			"stars",
+			"moon",
+			"planets",
+			"ocean",
+			"sea",
+			"snow",
+			"bird",
 			"animal",
-			"fun",
-			"colorful",
+			"creature",
+			"artificial",
+			"people",
+			"vehicle",
+			"machine",
+			"forest",
+			"tree",
+			"fish",
+			"sea creature",
 		];
 		const hasChildFriendlyLabels = labels.some((label) =>
 			childFriendlyLabels.includes(label)
@@ -59,7 +75,7 @@ async function isAttractiveToChildren(imagePath) {
 // 	console.log("Attractive to children: ", result);
 // })();
 
-export async function filterImage(imagePath) {
+export default async function filterImage(imagePath) {
 	const result = await isAttractiveToChildren(imagePath);
 	console.log("Attractive to children: ", result);
 	return result;
