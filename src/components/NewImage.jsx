@@ -4,7 +4,7 @@ import axios from "axios";
 import ImageCard from "./ImageCard";
 import { addoneimage } from "../utils/imageSlice";
 import { useDispatch } from "react-redux";
-import filterImage from "../utils/imageFilter";
+// import filterImage from "../utils/imageFilter";
 
 const NewImage = () => {
 	const [selectedFile, setSelectedFile] = useState(null);
@@ -34,16 +34,23 @@ const NewImage = () => {
 	};
 
 	const handleFileChange = (event) => {
-		// setIsImageValid(filterImage(event.target.files[0]));
-		// if (isImageValid) {
-		// 	setSelectedFile(event.target.files[0]);
-		// 	setMessage("");
-		// 	setImageUrl("");
-		// } else {
-		// 	setMessage("Sorry. This image is not allowed to add to this site.");
-		// 	setImageUrl("");
-		// }
-		setIsImageValid(true);
+		try {
+			// setIsImageValid(filterImage(event.target.files[0]));
+			// if (isImageValid) {
+			// 	setSelectedFile(event.target.files[0]);
+			// 	setMessage("");
+			// 	setImageUrl("");
+			// } else {
+			// 	setMessage("Sorry. This image is not allowed to add to this site.");
+			// 	setImageUrl("");
+			// }
+			setIsImageValid(true);
+			setSelectedFile(event.target.files[0]);
+			setMessage("");
+			setImageUrl("");
+		} catch (err) {
+			console.error(err);
+		}
 	};
 
 	const handleSubmit = async () => {
@@ -52,11 +59,11 @@ const NewImage = () => {
 				setMessage("Please select upload an image");
 				return;
 			}
-
-			if (!isImageValid) {
-				setMessage("Sorry. This image is not allowed to add to this site.");
-				return;
-			}
+			console.log("submit clicked");
+			// if (!isImageValid) {
+			// 	setMessage("Sorry. This image is not allowed to add to this site.");
+			// 	return;
+			// }
 
 			const formData = new FormData();
 			formData.append("image", selectedFile);

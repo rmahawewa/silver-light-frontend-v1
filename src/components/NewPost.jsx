@@ -117,12 +117,15 @@ const NewPost = ({ post_id, handlePostidChange }) => {
 				<div className="flex justify-center py-12">
 					<fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
 						<legend className="fieldset-legend">Add new post</legend>
-						<button
-							className="btn btn-success m-1"
-							onClick={() => setSelectImages(true)}
-						>
-							Select from uploaded images
-						</button>
+						{images.length > 0 && (
+							<button
+								className="btn btn-success m-1"
+								onClick={() => setSelectImages(true)}
+							>
+								Select from uploaded images
+							</button>
+						)}
+
 						<label className="label">Title</label>
 						<input
 							type="text"
