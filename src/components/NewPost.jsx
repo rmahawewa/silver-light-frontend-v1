@@ -19,7 +19,7 @@ const NewPost = ({ post_id, handlePostidChange }) => {
 	const [postId, setPostId] = useState(post_id);
 	const dispatch = useDispatch();
 	const categoryChanged = (value) => {
-		value.length < 21 && setCategory(value);
+		value.length < 15 && setCategory(value);
 	};
 
 	useEffect(() => {

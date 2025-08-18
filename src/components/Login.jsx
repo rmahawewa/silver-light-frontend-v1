@@ -124,7 +124,11 @@ const Login = () => {
 				</button>
 				<div
 					className="justify-center"
-					onClick={() => setIsLoggingForm((value) => !value)}
+					onClick={() => {
+						setIsLoggingForm((value) => !value);
+						setEmailId("");
+						setPassword("");
+					}}
 				>
 					<p className="text-center cursor-pointer">
 						{isLoggingForm ? "I want to Sign up" : "Go to login"}
