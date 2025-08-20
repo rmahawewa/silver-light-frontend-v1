@@ -17,6 +17,23 @@ const Connections = ({ status }) => {
 	);
 	console.log(connecs);
 
+	// const getLastVisitedTime = async () => {
+	// 	try {
+	// 		const siteUrl = window.location.href;
+	// 		const res = await axios.post(
+	// 			BASE_URL + "/lastvisited/get",
+	// 			{ loggedInUsr: loggedInUsr, siteUrl: siteUrl },
+	// 			{ withCredentials: true }
+	// 		);
+	// 		console.log(res.data.data[0].createdAt);
+	// 		const createdAt = res.data.data[0].createdAt;
+	// 		return createdAt;
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 		return null;
+	// 	}
+	// };
+
 	const saveVisitedUserInformation = async () => {
 		try {
 			const siteUrl = window.location.href;
@@ -25,7 +42,7 @@ const Connections = ({ status }) => {
 				{ siteUrl: siteUrl },
 				{ withCredentials: true }
 			);
-			console.log("site visited information: " + res);
+			console.log(res);
 		} catch (err) {
 			console.error(err);
 		}
@@ -33,7 +50,29 @@ const Connections = ({ status }) => {
 
 	useEffect(() => {
 		try {
-			saveVisitedUserInformation();
+			const getLastVisitedTime = async () => {
+				try {
+					const siteUrl = window.location.href;
+					const res = await axios.post(
+						BASE_URL + "/lastvisited/get",
+						{ loggedInUsr: loggedInUsr, siteUrl: siteUrl },
+						{ withCredentials: true }
+					);
+					console.log(res?.data?.data[0]?.createdAt);
+					const createdAt = res?.data?.data[0]?.createdAt;
+					console.log(typeof createdAt);
+					return createdAt;
+				} catch (err) {
+					console.error(err);
+					return 0;
+				}
+			};
+			const lastVisitedTime = getLastVisitedTime();
+			if (typeof lastVisitedTime === "string") {
+				saveVisitedUserInformation();
+			} else if (typeof lastVisitedTime === "number") {
+				saveVisitedUserInformation();
+			}
 		} catch (err) {
 			console.log(err);
 		}
