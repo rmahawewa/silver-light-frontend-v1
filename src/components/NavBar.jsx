@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
@@ -7,6 +7,7 @@ import axios from "axios";
 import NewImage from "./NewImage";
 import NewPost from "./NewPost";
 import Categories from "./Categories";
+import saveVisitedUserInformation from "./UserFunctions/GetPageVisitedTime";
 
 const NavBar = () => {
 	const user = useSelector((store) => store.user);
@@ -14,6 +15,15 @@ const NavBar = () => {
 	const navigate = useNavigate();
 	const [itemSwitch, setItemSwitch] = useState("");
 	const [post_id, setPostid] = useState("");
+	const [lastVisitedTime, setLastVisitedTime] = useState("");
+
+	const loggedInUsr = useSelector((store) => store.user)?._id;
+
+	const connections = useSelector((store) => store.connectionfeed).filter(
+		(c) => c.createdAt > lastVisitedTime && c.status === "accepted"
+	);
+	console.log(connections);
+	console.log(connections.length);
 
 	const handlePostidChange = (value) => {
 		setPostid(value);
@@ -28,6 +38,39 @@ const NavBar = () => {
 			console.error(err.message);
 		}
 	};
+
+	useEffect(() => {
+		const processLastVisitedTime = async () => {
+			try {
+				const getLastVisitedTime = async () => {
+					try {
+						const siteUrl = window.location.href;
+						const res = await axios.post(
+							BASE_URL + "/lastvisited/get",
+							{ loggedInUsr: loggedInUsr, siteUrl: siteUrl },
+							{ withCredentials: true }
+						);
+						const createdAt = res?.data?.data[0]?.createdAt;
+						setLastVisitedTime(createdAt);
+						return createdAt;
+					} catch (err) {
+						console.error(err);
+						return 0;
+					}
+				};
+				const lastVisitedTime = await getLastVisitedTime();
+				if (lastVisitedTime) {
+					saveVisitedUserInformation();
+					console.log(lastVisitedTime);
+				} else {
+					saveVisitedUserInformation();
+				}
+			} catch (err) {
+				console.log(err);
+			}
+		};
+		user && processLastVisitedTime();
+	}, []);
 
 	return (
 		<>
@@ -161,7 +204,8 @@ const NavBar = () => {
 								</li>
 								<li>
 									<Link to="/connections" className="justify-between">
-										Connections<span className="badge">New {5}</span>
+										Connections
+										<span className="badge">New {connections.length}</span>
 									</Link>
 								</li>
 								<li>

@@ -8,6 +8,7 @@ import {
 } from "../utils/connectionRequestSlice";
 import Message from "./icons/Message";
 import ActiveMessage from "./icons/ActiveMessage";
+import saveVisitedUserInformation from "./UserFunctions/GetPageVisitedTime";
 
 const Connections = ({ status }) => {
 	const loggedInUsr = useSelector((store) => store.user)?._id;
@@ -17,20 +18,6 @@ const Connections = ({ status }) => {
 	);
 	console.log(connecs);
 	const [lastVisitedTime, setLastVisitedTime] = useState("");
-
-	const saveVisitedUserInformation = async () => {
-		try {
-			const siteUrl = window.location.href;
-			const res = await axios.post(
-				BASE_URL + "/lastvisited/save",
-				{ siteUrl: siteUrl },
-				{ withCredentials: true }
-			);
-			console.log(res);
-		} catch (err) {
-			console.error(err);
-		}
-	};
 
 	useEffect(() => {
 		const processLastVisitedTime = async () => {
