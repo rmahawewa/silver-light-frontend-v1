@@ -16,23 +16,7 @@ const Connections = ({ status }) => {
 		(c) => c.status === status
 	);
 	console.log(connecs);
-
-	// const getLastVisitedTime = async () => {
-	// 	try {
-	// 		const siteUrl = window.location.href;
-	// 		const res = await axios.post(
-	// 			BASE_URL + "/lastvisited/get",
-	// 			{ loggedInUsr: loggedInUsr, siteUrl: siteUrl },
-	// 			{ withCredentials: true }
-	// 		);
-	// 		console.log(res.data.data[0].createdAt);
-	// 		const createdAt = res.data.data[0].createdAt;
-	// 		return createdAt;
-	// 	} catch (err) {
-	// 		console.error(err);
-	// 		return null;
-	// 	}
-	// };
+	const [lastVisitedTime, setLastVisitedTime] = useState("");
 
 	const saveVisitedUserInformation = async () => {
 		try {
@@ -49,33 +33,36 @@ const Connections = ({ status }) => {
 	};
 
 	useEffect(() => {
-		try {
-			const getLastVisitedTime = async () => {
-				try {
-					const siteUrl = window.location.href;
-					const res = await axios.post(
-						BASE_URL + "/lastvisited/get",
-						{ loggedInUsr: loggedInUsr, siteUrl: siteUrl },
-						{ withCredentials: true }
-					);
-					console.log(res?.data?.data[0]?.createdAt);
-					const createdAt = res?.data?.data[0]?.createdAt;
-					console.log(typeof createdAt);
-					return createdAt;
-				} catch (err) {
-					console.error(err);
-					return 0;
+		const processLastVisitedTime = async () => {
+			try {
+				const getLastVisitedTime = async () => {
+					try {
+						const siteUrl = window.location.href;
+						const res = await axios.post(
+							BASE_URL + "/lastvisited/get",
+							{ loggedInUsr: loggedInUsr, siteUrl: siteUrl },
+							{ withCredentials: true }
+						);
+						const createdAt = res?.data?.data[0]?.createdAt;
+						setLastVisitedTime(createdAt);
+						return createdAt;
+					} catch (err) {
+						console.error(err);
+						return 0;
+					}
+				};
+				const lastVisitedTime = await getLastVisitedTime();
+				if (lastVisitedTime) {
+					saveVisitedUserInformation();
+					console.log(lastVisitedTime);
+				} else {
+					saveVisitedUserInformation();
 				}
-			};
-			const lastVisitedTime = getLastVisitedTime();
-			if (typeof lastVisitedTime === "string") {
-				saveVisitedUserInformation();
-			} else if (typeof lastVisitedTime === "number") {
-				saveVisitedUserInformation();
+			} catch (err) {
+				console.log(err);
 			}
-		} catch (err) {
-			console.log(err);
-		}
+		};
+		processLastVisitedTime();
 	}, []);
 
 	return (
@@ -93,6 +80,8 @@ const Connections = ({ status }) => {
 									conn={c.toUserId}
 									direction={"to"}
 									status={status}
+									createdAt={c.createdAt}
+									lastvisitedtime={lastVisitedTime}
 								/>
 							) : (
 								<ConnectionView
@@ -100,6 +89,8 @@ const Connections = ({ status }) => {
 									conn={c.fromUserId}
 									direction={"from"}
 									status={status}
+									createdAt={c.createdAt}
+									lastvisitedtime={lastVisitedTime}
 								/>
 							)}
 						</li>
@@ -114,7 +105,14 @@ const Connections = ({ status }) => {
 	);
 };
 
-const ConnectionView = ({ cid, conn, direction, status }) => {
+const ConnectionView = ({
+	cid,
+	conn,
+	direction,
+	status,
+	createdAt,
+	lastvisitedtime,
+}) => {
 	const dispatch = useDispatch();
 	const conReqs = useSelector((store) => store.connectionfeed);
 	const respondToConnectionRequest = async (id, status) => {
@@ -134,49 +132,61 @@ const ConnectionView = ({ cid, conn, direction, status }) => {
 
 	return (
 		conReqs && (
-			<div className="flex justify-between m-4 p-4 w-full mx-auto">
-				<div>
-					<div className="flex items-center">
-						<div>
-							<img className="size-10 rounded-box" src={conn.photoUrl} />
-						</div>
-						<div className="px-5">
-							<div>{conn.userName}</div>
-							<div className="text-xs font-semibold opacity-60">
-								Since: {conn.updatedAt}
+			<>
+				{new Date(createdAt).getTime() >
+					new Date(lastvisitedtime).getTime() && (
+					<div className="flex justify-between mx-4 w-full">
+						<p>new</p>
+					</div>
+				)}
+				<div className="flex justify-between m-4 px-4 w-full mx-auto">
+					<div>
+						<div className="flex items-center">
+							<div>
+								<img className="size-10 rounded-box" src={conn.photoUrl} />
+							</div>
+							<div className="px-5">
+								<div>{conn.userName}</div>
+								<div className="text-xs font-semibold opacity-60">
+									Since: {conn.updatedAt}
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
 
-				<div className="flex items-center justify-between gap-5 px-5">
-					<button className="btn btn-square btn-ghost">
-						<ActiveMessage />
-					</button>
-					{status === "sent" && (
-						<div>
-							{direction === "to" ? (
-								<span>Pending</span>
-							) : (
-								<div className="flex items-center justify-between gap-3">
-									<button
-										className="btn btn-primary"
-										onClick={() => respondToConnectionRequest(cid, "accepted")}
-									>
-										Accept
-									</button>
-									<button
-										className="btn btn-primary"
-										onClick={() => respondToConnectionRequest(cid, "rejected")}
-									>
-										Reject
-									</button>
-								</div>
-							)}
-						</div>
-					)}
+					<div className="flex items-center justify-between gap-5 px-5">
+						<button className="btn btn-square btn-ghost">
+							<ActiveMessage />
+						</button>
+						{status === "sent" && (
+							<div>
+								{direction === "to" ? (
+									<span>Pending</span>
+								) : (
+									<div className="flex items-center justify-between gap-3">
+										<button
+											className="btn btn-primary"
+											onClick={() =>
+												respondToConnectionRequest(cid, "accepted")
+											}
+										>
+											Accept
+										</button>
+										<button
+											className="btn btn-primary"
+											onClick={() =>
+												respondToConnectionRequest(cid, "rejected")
+											}
+										>
+											Reject
+										</button>
+									</div>
+								)}
+							</div>
+						)}
+					</div>
 				</div>
-			</div>
+			</>
 		)
 	);
 };
