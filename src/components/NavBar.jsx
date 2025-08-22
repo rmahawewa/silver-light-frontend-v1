@@ -24,6 +24,7 @@ const NavBar = () => {
 	);
 	console.log(connections);
 	console.log(connections.length);
+	console.log(user);
 
 	const handlePostidChange = (value) => {
 		setPostid(value);
@@ -157,7 +158,7 @@ const NavBar = () => {
 							{/* </Link> */}
 						</button>
 
-						<button
+						{/* <button
 							className="btn btn-ghost btn-circle tooltip tooltip-left tooltip-primary"
 							data-tip="Notifications"
 						>
@@ -179,7 +180,7 @@ const NavBar = () => {
 								</svg>
 								<span className="badge badge-xs badge-primary indicator-item"></span>
 							</div>
-						</button>
+						</button> */}
 						{/* </div> */}
 
 						<div className="dropdown dropdown-end mx-5">
@@ -190,8 +191,8 @@ const NavBar = () => {
 							>
 								<div className="w-10 rounded-full">
 									<img
-										alt="Tailwind CSS Navbar component"
-										src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+										alt={user.firstName + " " + user.lastName}
+										src={user.photoUrl}
 									/>
 								</div>
 							</div>

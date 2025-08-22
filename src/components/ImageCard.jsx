@@ -126,6 +126,11 @@ const ImageCard = ({ imageId }) => {
 							<span key={i}>#{c} </span>
 						))}
 					</p>
+					<div className="text-primary">
+						<p>
+							by, {image.uploadedUserDetails[0].userName} @ {image.createdAt}
+						</p>
+					</div>
 					<div className="card-actions justify-end py-5">
 						<button
 							onClick={() => saveReaction("like")}
@@ -196,7 +201,7 @@ const ImageCard = ({ imageId }) => {
 					{!(reaction === "" || reaction === "undo") && (
 						<p
 							onClick={() => getSimillarReactionsForTheImage(reaction)}
-							className="cursor-pointer"
+							className="cursor-pointer text-primary"
 						>
 							View {findSimilarReactionCount(reaction)} simillar reactions
 						</p>
