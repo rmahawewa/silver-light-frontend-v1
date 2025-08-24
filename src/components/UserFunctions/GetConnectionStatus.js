@@ -4,9 +4,9 @@ import React from "react";
 const GetConnectionStatus = (userId, userConnections) => {
 	// const userConnections = useSelector((store) => store.connectionfeed);
 	return (
-		userConnections.length > 0 &&
+		userConnections?.length > 0 &&
 		userConnections.find(
-			(r) => r.fromUserId._id === userId || r.toUserId._id === userId
+			(r) => r?.fromUserId?._id === userId || r?.toUserId?._id === userId
 		)
 	);
 };

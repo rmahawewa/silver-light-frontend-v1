@@ -125,7 +125,7 @@ const CommentTree = ({ postId, commentId, comments, findPostComments }) => {
 		<li>
 			<div className="">
 				<div>
-					<div className="flex justify-between w-full py-4 input input-xs">
+					<div className="flex justify-between w-full py-4 input input-xs text-primary">
 						<div>{currentComment?.commentByUser?.userName}</div>
 						<div>{commentDate}</div>
 						<div>

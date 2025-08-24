@@ -19,7 +19,7 @@ import Profile from "./components/Profile";
 
 function App() {
 	return (
-		<>
+		<div className="text-info-content/90">
 			<Provider store={reduxStore}>
 				<PersistGate loading={null} persistor={persistor}>
 					<BrowserRouter basename="/">
@@ -47,7 +47,7 @@ function App() {
 					</BrowserRouter>
 				</PersistGate>
 			</Provider>
-		</>
+		</div>
 	);
 }
 
