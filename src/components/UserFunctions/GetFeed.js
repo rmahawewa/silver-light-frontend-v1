@@ -19,8 +19,8 @@ export const GetFeed = async (dispatch, category) => {
 		);
 		console.log(res.data);
 		// console.log(res.data.postData);
-		dispatch(addImageFeed(res.data.imageData));
-		dispatch(addPostFeed(res.data.postData));
+		dispatch(addImageFeed(res?.data?.imageData));
+		dispatch(addPostFeed(res?.data?.postData));
 		// const postComments = await axios.get(BASE_URL + "/feed/postcomments", {
 		// 	// operate later
 		// 	withCredentials: true,
@@ -35,7 +35,13 @@ export const GetConnections = async (dispatch) => {
 		const res = await axios.get(BASE_URL + "/request/user-requests", {
 			withCredentials: true,
 		});
-		console.log(res.data.connections);
-		dispatch(addConnectionFeed(res.data.connections));
-	} catch (err) {}
+		// Create a new, flattened array from the API response
+		const flattenedConnections = res.data.connections.flatMap((item) =>
+			Array.isArray(item) ? item : [item]
+		);
+		console.log(flattenedConnections); // Verify the new structure
+		dispatch(addConnectionFeed(flattenedConnections));
+	} catch (err) {
+		console.error(err);
+	}
 };

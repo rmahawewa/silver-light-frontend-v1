@@ -41,8 +41,12 @@ const imageSlice = createSlice({
 			state = [...state, action.payload];
 			return state;
 		},
+		removeImage: (state, action) => {
+			return null;
+		},
 	},
 });
 
-export const { addImageFeed, savereaction, addoneimage } = imageSlice.actions;
+export const { addImageFeed, savereaction, addoneimage, removeImage } =
+	imageSlice.actions;
 export default imageSlice.reducer;

@@ -110,104 +110,110 @@ const ImageCard = ({ imageId }) => {
 
 	return (
 		<>
-			<div className="card bg-base-100 w-200 shadow-sm">
-				<figure>
-					<img
-						// src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
-						src={image.url}
-						alt="Shoes"
-					/>
-				</figure>
-				<div className="card-body">
-					<h2 className="card-title">{image.photoTitle}</h2>
-					<p>{image.photoDescription}</p>
-					<p>
-						{image.category.map((c, i) => (
-							<span key={i}>#{c} </span>
-						))}
-					</p>
-					<div className="text-primary">
+			{image && (
+				<div className="card bg-base-100 w-200 shadow-sm">
+					<figure>
+						<img
+							// src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+							src={image?.url}
+							alt="Shoes"
+						/>
+					</figure>
+					<div className="card-body">
+						<h2 className="card-title">{image.photoTitle}</h2>
+						<p>{image.photoDescription}</p>
 						<p>
-							by, {image.uploadedUserDetails[0].userName} @ {image.createdAt}
+							{image.category.map((c, i) => (
+								<span key={i}>#{c} </span>
+							))}
 						</p>
+						<div className="text-primary">
+							{image?.uploadedUserDetails && (
+								<p>
+									by, {image.uploadedUserDetails[0].userName} @{" "}
+									{image.createdAt}
+								</p>
+							)}
+						</div>
+						<div className="card-actions justify-end py-5">
+							<button
+								onClick={() => saveReaction("like")}
+								className={
+									reaction === "like"
+										? "btn btn-soft btn-primary"
+										: "btn btn-primary"
+								}
+							>
+								<Like />
+								Like
+							</button>
+							<button
+								onClick={() => saveReaction("familier")}
+								className={
+									reaction === "familier"
+										? "btn btn-soft btn-primary"
+										: "btn btn-primary"
+								}
+							>
+								<Familier />
+								Familier
+							</button>
+							<button
+								onClick={() => saveReaction("love")}
+								className={
+									reaction === "love"
+										? "btn btn-soft btn-primary"
+										: "btn btn-primary"
+								}
+							>
+								<Love />
+								Love
+							</button>
+							<button
+								onClick={() => saveReaction("aTrue")}
+								className={
+									reaction === "aTrue"
+										? "btn btn-soft btn-primary"
+										: "btn btn-primary"
+								}
+							>
+								<True />
+								True
+							</button>
+							<button
+								onClick={() => saveReaction("wonderful")}
+								className={
+									reaction === "wonderful"
+										? "btn btn-soft btn-primary"
+										: "btn btn-primary"
+								}
+							>
+								<Wonderful />
+								Wonderful
+							</button>
+							<button
+								onClick={() => saveReaction("iFeelJelousy")}
+								className={
+									reaction === "iFeelJelousy"
+										? "btn btn-soft btn-primary"
+										: "btn btn-primary"
+								}
+							>
+								<IFeelJelousy />I feel jelousy
+							</button>
+						</div>
+						{!(reaction === "" || reaction === "undo") && (
+							<p
+								onClick={() => getSimillarReactionsForTheImage(reaction)}
+								className="cursor-pointer text-primary"
+							>
+								View {findSimilarReactionCount(reaction)} simillar reactions
+							</p>
+						)}
 					</div>
-					<div className="card-actions justify-end py-5">
-						<button
-							onClick={() => saveReaction("like")}
-							className={
-								reaction === "like"
-									? "btn btn-soft btn-primary"
-									: "btn btn-primary"
-							}
-						>
-							<Like />
-							Like
-						</button>
-						<button
-							onClick={() => saveReaction("familier")}
-							className={
-								reaction === "familier"
-									? "btn btn-soft btn-primary"
-									: "btn btn-primary"
-							}
-						>
-							<Familier />
-							Familier
-						</button>
-						<button
-							onClick={() => saveReaction("love")}
-							className={
-								reaction === "love"
-									? "btn btn-soft btn-primary"
-									: "btn btn-primary"
-							}
-						>
-							<Love />
-							Love
-						</button>
-						<button
-							onClick={() => saveReaction("aTrue")}
-							className={
-								reaction === "aTrue"
-									? "btn btn-soft btn-primary"
-									: "btn btn-primary"
-							}
-						>
-							<True />
-							True
-						</button>
-						<button
-							onClick={() => saveReaction("wonderful")}
-							className={
-								reaction === "wonderful"
-									? "btn btn-soft btn-primary"
-									: "btn btn-primary"
-							}
-						>
-							<Wonderful />
-							Wonderful
-						</button>
-						<button
-							onClick={() => saveReaction("iFeelJelousy")}
-							className={
-								reaction === "iFeelJelousy"
-									? "btn btn-soft btn-primary"
-									: "btn btn-primary"
-							}
-						>
-							<IFeelJelousy />I feel jelousy
-						</button>
-					</div>
-					{!(reaction === "" || reaction === "undo") && (
-						<p
-							onClick={() => getSimillarReactionsForTheImage(reaction)}
-							className="cursor-pointer text-primary"
-						>
-							View {findSimilarReactionCount(reaction)} simillar reactions
-						</p>
-					)}
 				</div>
-			</div>
+			)}
+
 			<dialog id={modalId} className="modal">
 				<ReactorsList
 					user={user}

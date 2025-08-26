@@ -8,12 +8,15 @@ const connectionRequestSlice = createSlice({
 			return action.payload;
 		},
 		addNewConnectionRequest: (state, action) => {
-			if (state.length === 0) {
-				return action.payload;
-			} else {
-				state.push(action.payload);
-				return state;
-			}
+			// if (state.length === 0) {
+			// 	return action.payload;
+			// } else {
+			// 	// state.push(action.payload);
+			// 	// return state;
+			// 	state = [...state, action.payload];
+			// 	return state;
+			// }
+			return [...state, action.payload];
 		},
 		saveRespond: (state, action) => {
 			const request = action.payload;
@@ -23,9 +26,16 @@ const connectionRequestSlice = createSlice({
 			}
 			entry.status = request.status;
 		},
+		removeConnections: (state, action) => {
+			return null;
+		},
 	},
 });
 
-export const { addConnectionFeed, addNewConnectionRequest, saveRespond } =
-	connectionRequestSlice.actions;
+export const {
+	addConnectionFeed,
+	addNewConnectionRequest,
+	saveRespond,
+	removeConnections,
+} = connectionRequestSlice.actions;
 export default connectionRequestSlice.reducer;

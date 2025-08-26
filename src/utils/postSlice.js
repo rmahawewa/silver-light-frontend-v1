@@ -41,8 +41,12 @@ const postSlice = createSlice({
 				});
 			}
 		},
+		removePosts: (state, action) => {
+			return null;
+		},
 	},
 });
 
-export const { addPostFeed, addOnePost, savepostreaction } = postSlice.actions;
+export const { addPostFeed, addOnePost, savepostreaction, removePosts } =
+	postSlice.actions;
 export default postSlice.reducer;

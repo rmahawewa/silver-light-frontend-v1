@@ -8,6 +8,9 @@ import NewImage from "./NewImage";
 import NewPost from "./NewPost";
 import Categories from "./Categories";
 import saveVisitedUserInformation from "./UserFunctions/GetPageVisitedTime";
+import { removeConnections } from "../utils/connectionRequestSlice";
+import { removePosts } from "../utils/postSlice";
+import { removeImage } from "../utils/imageSlice";
 
 const NavBar = () => {
 	const user = useSelector((store) => store.user);
@@ -15,25 +18,33 @@ const NavBar = () => {
 	const navigate = useNavigate();
 	const [itemSwitch, setItemSwitch] = useState("");
 	const [post_id, setPostid] = useState("");
+	const [imageId, setImageId] = useState("");
 	const [lastVisitedTime, setLastVisitedTime] = useState("");
 
 	const loggedInUsr = useSelector((store) => store.user)?._id;
 
-	const connections = useSelector((store) => store.connectionfeed).filter(
-		(c) => c.createdAt > lastVisitedTime && c.status === "accepted"
+	const connections = useSelector((store) => store?.connectionfeed)?.filter(
+		(c) => c?.createdAt > lastVisitedTime && c?.status === "accepted"
 	);
-	console.log(connections);
-	console.log(connections.length);
-	console.log(user);
+	// console.log(connections);
+	// console.log(connections?.length);
+	// console.log(user);
 
 	const handlePostidChange = (value) => {
 		setPostid(value);
+	};
+
+	const handleImageIdChange = (value) => {
+		setImageId(value);
 	};
 
 	const handleLogout = async () => {
 		try {
 			await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
 			dispatch(removeUser());
+			dispatch(removeConnections());
+			dispatch(removePosts());
+			dispatch(removeImage());
 			return navigate("/login");
 		} catch (err) {
 			console.error(err.message);
@@ -109,6 +120,7 @@ const NavBar = () => {
 								<li>
 									<span
 										onClick={() => {
+											handleImageIdChange("");
 											setItemSwitch("image");
 											document.getElementById("my_modal_1").showModal();
 										}}
@@ -206,7 +218,7 @@ const NavBar = () => {
 								<li>
 									<Link to="/connections" className="justify-between">
 										Connections
-										<span className="badge">New {connections.length}</span>
+										<span className="badge">New {connections?.length}</span>
 									</Link>
 								</li>
 								<li>
@@ -227,7 +239,12 @@ const NavBar = () => {
 			{/* <button className="btn">open modal</button> */}
 			<dialog id="my_modal_1" className="modal">
 				<div className="modal-box w-11/12 max-w-5xl">
-					{itemSwitch === "image" && <NewImage />}
+					{itemSwitch === "image" && (
+						<NewImage
+							imageId={imageId}
+							handleImageIdChange={handleImageIdChange}
+						/>
+					)}
 					{itemSwitch === "post" && (
 						<NewPost
 							post_id={post_id}

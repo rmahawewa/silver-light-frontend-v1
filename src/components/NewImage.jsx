@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import ImageCard from "./ImageCard";
@@ -6,7 +6,7 @@ import { addoneimage } from "../utils/imageSlice";
 import { useDispatch } from "react-redux";
 // import filterImage from "../utils/imageFilter";
 
-const NewImage = () => {
+const NewImage = ({ imageId, handleImageIdChange }) => {
 	const [selectedFile, setSelectedFile] = useState(null);
 	const [message, setMessage] = useState("");
 	const [imageUrl, setImageUrl] = useState("");
@@ -14,12 +14,31 @@ const NewImage = () => {
 	const [category, setCategory] = useState("");
 	const [categories, setCategories] = useState([]);
 	const [description, setDescription] = useState("");
-	const [imageId, setImageId] = useState("");
+
+	const fileInputRef = useRef(null);
+
 	const [isImageValid, setIsImageValid] = useState(true);
 	const dispatch = useDispatch();
 	const categoryChanged = (value) => {
 		value.length < 21 && setCategory(value);
 	};
+
+	const makeFieldsEmpty = () => {
+		if (fileInputRef.current) {
+			fileInputRef.current.value = "";
+			setSelectedFile(null);
+
+			setMessage("");
+			setTitle("");
+			setCategories([]);
+			setDescription("");
+		}
+	};
+
+	useEffect(() => {
+		console.log(imageId.imageId);
+	}, []);
+
 	const addCategory = () => {
 		if (category !== "") {
 			categories.length < 6 &&
@@ -35,15 +54,6 @@ const NewImage = () => {
 
 	const handleFileChange = (event) => {
 		try {
-			// setIsImageValid(filterImage(event.target.files[0]));
-			// if (isImageValid) {
-			// 	setSelectedFile(event.target.files[0]);
-			// 	setMessage("");
-			// 	setImageUrl("");
-			// } else {
-			// 	setMessage("Sorry. This image is not allowed to add to this site.");
-			// 	setImageUrl("");
-			// }
 			setIsImageValid(true);
 			setSelectedFile(event.target.files[0]);
 			setMessage("");
@@ -60,10 +70,6 @@ const NewImage = () => {
 				return;
 			}
 			console.log("submit clicked");
-			// if (!isImageValid) {
-			// 	setMessage("Sorry. This image is not allowed to add to this site.");
-			// 	return;
-			// }
 
 			const formData = new FormData();
 			formData.append("image", selectedFile);
@@ -82,9 +88,10 @@ const NewImage = () => {
 			}
 			if (response.data.data._id) {
 				console.log(response.data.data._id);
-				setImageId(response.data.data._id);
+				handleImageIdChange(response.data.data._id);
 			}
 			if (imageId) console.log("123456");
+			makeFieldsEmpty();
 		} catch (err) {
 			console.error(err);
 			setMessage(err);
@@ -101,6 +108,7 @@ const NewImage = () => {
 					accept="image/*"
 					className="input"
 					onChange={handleFileChange}
+					ref={fileInputRef}
 				/>
 				{message && <span>{message}</span>}
 				<label className="label">Title</label>
@@ -151,7 +159,18 @@ const NewImage = () => {
 					value={description}
 					onChange={(e) => setDescription(e.target.value)}
 				></textarea>
-				<button className="btn btn-success" onClick={handleSubmit}>
+				<button
+					className="btn btn-success"
+					onClick={handleSubmit}
+					disabled={
+						!(
+							selectedFile &&
+							title.length > 0 &&
+							categories.length > 0 &&
+							description.length > 0
+						)
+					}
+				>
 					Add
 				</button>
 			</fieldset>

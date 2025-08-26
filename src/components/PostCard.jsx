@@ -184,17 +184,19 @@ const PostCard = ({ postId }) => {
 				)}
 
 				<div className="card-body">
-					<h2 className="card-title">{post.title}</h2>
-					<p>{post.description}</p>
+					<h2 className="card-title">{post?.title}</h2>
+					<p>{post?.description}</p>
 					<p>
-						{post.category.map((c, i) => (
+						{post?.category.map((c, i) => (
 							<span key={i}>#{c} </span>
 						))}
 					</p>
 					<div className="text-primary">
-						<p>
-							by, {post.createdUserDetails[0].userName} @ {post.createdAt}
-						</p>
+						{post?.createdUserDetails && (
+							<p>
+								by, {post?.createdUserDetails[0]?.userName} @ {post?.createdAt}
+							</p>
+						)}
 						<p> </p>
 					</div>
 					<div className="card-actions justify-end py-5">

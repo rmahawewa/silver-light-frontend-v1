@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { addUser } from "../utils/userSlice";
+import { format } from "date-fns";
 
 const Profile = () => {
 	const [isEditable, setIsEditable] = useState(true);
@@ -13,7 +14,9 @@ const Profile = () => {
 	);
 	const [lastName, setLastName] = useState(user.lastName ? user.lastName : "");
 	const [userName, setUserName] = useState(user.userName ? user.userName : "");
-	const [birthday, setBirthday] = useState(user.birthday ? user.birthday : "");
+	const [birthday, setBirthday] = useState(
+		user.birthday ? format(user.birthday, "MM/dd/yyyy") : ""
+	);
 	const [email, setEmail] = useState(user.email ? user.email : "");
 	const [gender, setGender] = useState(user.gender ? user.gender : "");
 	const [photoUrl, setPhotoUrl] = useState(user.photoUrl ? user.photoUrl : "");
