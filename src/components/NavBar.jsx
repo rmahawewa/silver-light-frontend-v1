@@ -218,7 +218,7 @@ const NavBar = () => {
 								<li>
 									<Link to="/connections" className="justify-between">
 										Connections
-										<span className="badge">New {connections?.length}</span>
+										{/* <span className="badge">New {connections?.length}</span> */}
 									</Link>
 								</li>
 								<li>

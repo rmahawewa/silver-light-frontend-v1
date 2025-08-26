@@ -13,8 +13,8 @@ import saveVisitedUserInformation from "./UserFunctions/GetPageVisitedTime";
 const Connections = ({ status }) => {
 	const loggedInUsr = useSelector((store) => store.user)?._id;
 	console.log(loggedInUsr);
-	const connecs = useSelector((store) => store.connectionfeed).filter(
-		(c) => c.status === status
+	const connecs = useSelector((store) => store.connectionfeed)?.filter(
+		(c) => c?.status === status
 	);
 	console.log(connecs);
 	const [lastVisitedTime, setLastVisitedTime] = useState("");
