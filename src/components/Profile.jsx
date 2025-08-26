@@ -8,103 +8,74 @@ import { format } from "date-fns";
 const Profile = () => {
 	const [isEditable, setIsEditable] = useState(true);
 	const user = useSelector((store) => store.user);
-	//user input fields
-	const [firstName, setFirstName] = useState(
-		user.firstName ? user.firstName : ""
-	);
-	const [lastName, setLastName] = useState(user.lastName ? user.lastName : "");
-	const [userName, setUserName] = useState(user.userName ? user.userName : "");
-	const [birthday, setBirthday] = useState(
-		user.birthday ? format(user.birthday, "MM/dd/yyyy") : ""
-	);
-	const [email, setEmail] = useState(user.email ? user.email : "");
-	const [gender, setGender] = useState(user.gender ? user.gender : "");
-	const [photoUrl, setPhotoUrl] = useState(user.photoUrl ? user.photoUrl : "");
-	const [country, setCountry] = useState(user.country ? user.country : "");
-	const [reagion, setReagion] = useState(user.reagion ? user.reagion : "");
-	const [about, setAbout] = useState(user.about ? user.about : "");
-
-	const [selectedFile, setSelectedFile] = useState({});
-	const [previewUrl, setPreviewUrl] = useState(null);
-	const [error, setError] = useState("");
-
 	const dispatch = useDispatch();
 
-	// Use a useEffect hook to log the state *after* it has been updated.
-	// This hook runs whenever `photoUrl` or `selectedFile` changes.
-	useEffect(() => {
-		if (selectedFile) {
-			console.log("Selected file has been updated:", selectedFile);
-		}
-		if (photoUrl) {
-			console.log("Photo URL has been updated:", photoUrl);
-		}
-	}, [photoUrl, selectedFile]); // Dependency array: the effect runs when these values change.
+	// State for all user input fields
+	const [firstName, setFirstName] = useState("");
+	const [lastName, setLastName] = useState("");
+	const [userName, setUserName] = useState("");
+	const [birthday, setBirthday] = useState("");
+	const [email, setEmail] = useState("");
+	const [gender, setGender] = useState("");
+	const [photoUrl, setPhotoUrl] = useState("");
+	const [country, setCountry] = useState("");
+	const [reagion, setReagion] = useState("");
+	const [about, setAbout] = useState("");
 
+	// State for file upload and errors
+	const [selectedFile, setSelectedFile] = useState(null);
+	const [error, setError] = useState("");
+
+	// This useEffect hook runs whenever the `user` state from Redux changes.
+	// It populates the local component state with the user's details.
 	useEffect(() => {
-		setFirstName(user.firstName ? user.firstName : "");
-		setLastName(user.lastName ? user.lastName : "");
-		setUserName(user.userName ? user.userName : "");
-		setBirthday(user.birthday ? user.birthday : "");
-		setEmail(user.email ? user.email : "");
-		setGender(user.gender ? user.gender : "");
-		setPhotoUrl(user.photoUrl ? user.photoUrl : "");
-		setCountry(user.country ? user.country : "");
-		setReagion(user.reagion ? user.reagion : "");
-		setAbout(user.about ? user.about : "");
-		console.log(photoUrl);
+		if (user) {
+			setFirstName(user.firstName || "");
+			setLastName(user.lastName || "");
+			setUserName(user.userName || "");
+			// Correctly format the birthday string to "yyyy-MM-dd" for the input field.
+			setBirthday(
+				user.birthday ? format(new Date(user.birthday), "yyyy-MM-dd") : ""
+			);
+			setEmail(user.email || "");
+			setGender(user.gender || "");
+			setPhotoUrl(user.photoUrl || "");
+			setCountry(user.country || "");
+			setReagion(user.reagion || "");
+			setAbout(user.about || "");
+		}
 	}, [user]);
 
 	const handleFileChange = (event) => {
-		// setPhotoUrl(event.target.files[0]);
-
-		let file = event.target.files[0];
-		console.log(file); // logs the file details
+		const file = event.target.files[0];
 
 		if (file) {
-			// Basic validation: Check if it's an image
 			if (!file.type.startsWith("image/")) {
 				setError("Please select an image file (e.g., .jpg, .png, .gif).");
 				setSelectedFile(null);
-				setPhotoUrl(null);
 				return;
 			}
 
-			setError(""); // Clear any previous errors
-			setSelectedFile(event.target.files[0]);
-
-			console.log(selectedFile); // retuns null
-
-			// Create a FileReader instance
-			const reader = new FileReader();
-
-			// Set up the onload event handler
-			reader.onloadend = () => {
-				setPhotoUrl(reader.result); // reader.result contains the Data URL
-				console.log(photoUrl);
-			};
-
-			// Read the file as a Data URL
-			reader.readAsDataURL(file);
+			setError("");
+			setSelectedFile(file);
+			setPhotoUrl(URL.createObjectURL(file)); // Use a temporary object URL for preview
 		} else {
 			setSelectedFile(null);
-			setPhotoUrl(null);
+			// Revert to original photoUrl if the user cancels file selection
+			setPhotoUrl(user.photoUrl || "");
 			setError("");
 		}
 	};
 
 	const saveDetails = async () => {
 		try {
-			if (!selectedFile) {
-				setMessage("Please select upload an image");
-				return;
+			const formData = new FormData();
+
+			// Append file if selected
+			if (selectedFile) {
+				formData.append("image", selectedFile);
 			}
 
-			// console.log(selectedFile);
-
-			const formData = new FormData();
-			Object.keys(selectedFile).length > 0 &&
-				formData.append("image", selectedFile);
 			formData.append("firstName", firstName);
 			formData.append("lastName", lastName);
 			formData.append("userName", userName);
@@ -119,200 +90,189 @@ const Profile = () => {
 				headers: { "Content-Type": "multipart/form-data" },
 				withCredentials: true,
 			});
-			console.log(res.data.data);
-			if (res.data.data) {
-				//dispatch the user store
-				dispatch(addUser(res.data.data));
-				//view message
 
+			if (res.data.data) {
+				dispatch(addUser(res.data.data));
 				setIsEditable(false);
 			}
 		} catch (err) {
 			console.error(err);
-			setError(err);
+			setError(err.message || "An error occurred.");
 		}
 	};
 
 	return (
-		<div className="flex justify-center">
-			<fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-				<legend className="fieldset-legend">
-					{isEditable ? "Edit Page details" : "Page details"}
+		<div className="flex justify-center p-4">
+			<fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-2xl border p-6">
+				<legend className="fieldset-legend text-2xl font-bold px-2">
+					{isEditable ? "Edit Profile Details" : "Profile Details"}
 				</legend>
 
 				{isEditable ? (
-					<div className="flex">
-						<div>
-							<label className="label">First name</label>
-							<input
-								type="text"
-								className="input"
-								placeholder="First name"
-								value={firstName}
-								onChange={(e) => setFirstName(e.target.value)}
-							/>
-
-							<label className="label">Last name</label>
-							<input
-								type="text"
-								className="input"
-								placeholder="Last name"
-								value={lastName}
-								onChange={(e) => setLastName(e.target.value)}
-							/>
-
-							<label className="label">User name</label>
-							<input
-								type="text"
-								className="input"
-								placeholder="User name"
-								value={userName}
-								onChange={(e) => setUserName(e.target.value)}
-							/>
-
-							<div className="w-30 h-30 my-5 flex items-center justify-center">
-								{previewUrl ? (
-									<img
-										src={previewUrl}
-										style={{
-											maxWidth: "100%",
-											maxHeight: "100%",
-											objectFit: "contain",
-										}}
-									/>
-								) : (
-									photoUrl && (
-										<img
-											src={photoUrl}
-											style={{
-												maxWidth: "100%",
-												maxHeight: "100%",
-												objectFit: "contain",
-											}}
-										/>
-									)
-								)}
-							</div>
-
-							<div className="collapse">
-								<input type="checkbox" />
-								<div className="collapse-title">
-									<label className="label">Photo url</label>
+					<div className="space-y-4">
+						<div className="w-32 h-32 my-5 mx-auto rounded-full overflow-hidden border-2 border-gray-300 shadow-md">
+							{photoUrl ? (
+								<img
+									src={photoUrl}
+									alt="User Profile"
+									className="w-full h-full object-cover"
+								/>
+							) : (
+								<div className="w-full h-full bg-gray-400 flex items-center justify-center text-gray-700">
+									No Image
 								</div>
-								<div className="collapse-content text-sm">
-									<input
-										type="file"
-										accept="image/*"
-										className="input"
-										placeholder="Photo url"
-										onChange={(e) => handleFileChange(e)}
-									/>
-									{error && <p style={{ color: "red" }}>{error}</p>}
-								</div>
-							</div>
-
-							<label className="label">Birthday</label>
-							<input
-								type="date"
-								className="input"
-								placeholder="Birthday"
-								value={birthday}
-								onChange={(e) => setBirthday(e.target.value)}
-							/>
-
-							<label className="label">Email</label>
-							<input
-								type="text"
-								className="input"
-								placeholder="Email"
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
-							/>
-
-							<label className="label">Gender</label>
-							<input
-								type="text"
-								className="input"
-								placeholder="Gender"
-								value={gender}
-								onChange={(e) => setGender(e.target.value)}
-							/>
-
-							<label className="label">Country</label>
-							<input
-								type="text"
-								className="input"
-								placeholder="Country"
-								value={country}
-								onChange={(e) => setCountry(e.target.value)}
-							/>
-
-							<label className="label">Reagion</label>
-							<input
-								type="text"
-								className="input"
-								placeholder="Reagion"
-								value={reagion}
-								onChange={(e) => setReagion(e.target.value)}
-							/>
-
-							<label className="label">About</label>
-							<input
-								type="text"
-								className="input"
-								placeholder="About"
-								value={about}
-								onChange={(e) => setAbout(e.target.value)}
-							/>
-
-							<button
-								className="btn btn-neutral mt-4"
-								onClick={() => saveDetails()}
-							>
-								Save
-							</button>
+							)}
 						</div>
-					</div>
-				) : (
-					// <h1></h1>
-					<>
+
+						<div className="collapse bg-base-100 rounded-lg shadow-sm">
+							<input type="checkbox" className="min-h-0" />
+							<div className="collapse-title label font-semibold text-lg text-gray-700">
+								<label>Change Photo</label>
+							</div>
+							<div className="collapse-content">
+								<input
+									type="file"
+									accept="image/*"
+									className="input file-input w-full"
+									onChange={(e) => handleFileChange(e)}
+								/>
+								{error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+							</div>
+						</div>
+
 						<label className="label">First name</label>
-						<label>{firstName}</label>
+						<input
+							type="text"
+							className="input w-full"
+							placeholder="First name"
+							value={firstName}
+							onChange={(e) => setFirstName(e.target.value)}
+						/>
 
 						<label className="label">Last name</label>
-						<label>{lastName}</label>
+						<input
+							type="text"
+							className="input w-full"
+							placeholder="Last name"
+							value={lastName}
+							onChange={(e) => setLastName(e.target.value)}
+						/>
 
 						<label className="label">User name</label>
-						<label>{userName}</label>
+						<input
+							type="text"
+							className="input w-full"
+							placeholder="User name"
+							value={userName}
+							onChange={(e) => setUserName(e.target.value)}
+						/>
 
 						<label className="label">Birthday</label>
-						<label>{birthday}</label>
+						<input
+							type="date"
+							className="input w-full"
+							placeholder="Birthday"
+							value={birthday}
+							onChange={(e) => setBirthday(e.target.value)}
+						/>
 
 						<label className="label">Email</label>
-						<label>{email}</label>
+						<input
+							type="email"
+							className="input w-full"
+							placeholder="Email"
+							value={email}
+							onChange={(e) => setEmail(e.target.value)}
+						/>
 
 						<label className="label">Gender</label>
-						<label>{gender}</label>
-
-						<label className="label">Photo url</label>
-						<label>{photoUrl}</label>
+						<input
+							type="text"
+							className="input w-full"
+							placeholder="Gender"
+							value={gender}
+							onChange={(e) => setGender(e.target.value)}
+						/>
 
 						<label className="label">Country</label>
-						<label>{country}</label>
+						<input
+							type="text"
+							className="input w-full"
+							placeholder="Country"
+							value={country}
+							onChange={(e) => setCountry(e.target.value)}
+						/>
 
-						<label className="label">Reagion</label>
-						<label>{reagion}</label>
+						<label className="label">Region</label>
+						<input
+							type="text"
+							className="input w-full"
+							placeholder="Region"
+							value={reagion}
+							onChange={(e) => setReagion(e.target.value)}
+						/>
 
 						<label className="label">About</label>
-						<label>{about}</label>
+						<textarea
+							className="textarea w-full"
+							placeholder="About"
+							value={about}
+							onChange={(e) => setAbout(e.target.value)}
+						></textarea>
 
 						<button
-							className="btn btn-neutral mt-4"
+							className="btn btn-neutral w-full mt-4"
+							onClick={saveDetails}
+						>
+							Save
+						</button>
+					</div>
+				) : (
+					<div className="space-y-4">
+						<div className="w-32 h-32 my-5 mx-auto rounded-full overflow-hidden border-2 border-gray-300 shadow-md">
+							{photoUrl && (
+								<img
+									src={photoUrl}
+									alt="User Profile"
+									className="w-full h-full object-cover"
+								/>
+							)}
+						</div>
+
+						<label className="label font-semibold">First name</label>
+						<p className="text-gray-700">{firstName}</p>
+
+						<label className="label font-semibold">Last name</label>
+						<p className="text-gray-700">{lastName}</p>
+
+						<label className="label font-semibold">User name</label>
+						<p className="text-gray-700">{userName}</p>
+
+						<label className="label font-semibold">Birthday</label>
+						<p className="text-gray-700">{birthday}</p>
+
+						<label className="label font-semibold">Email</label>
+						<p className="text-gray-700">{email}</p>
+
+						<label className="label font-semibold">Gender</label>
+						<p className="text-gray-700">{gender}</p>
+
+						<label className="label font-semibold">Country</label>
+						<p className="text-gray-700">{country}</p>
+
+						<label className="label font-semibold">Region</label>
+						<p className="text-gray-700">{reagion}</p>
+
+						<label className="label font-semibold">About</label>
+						<p className="text-gray-700">{about}</p>
+
+						<button
+							className="btn btn-neutral w-full mt-4"
 							onClick={() => setIsEditable(true)}
 						>
 							Edit
 						</button>
-					</>
+					</div>
 				)}
 			</fieldset>
 		</div>
