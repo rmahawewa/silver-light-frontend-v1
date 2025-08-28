@@ -32,7 +32,7 @@ const Categories = () => {
 
 	return (
 		user && (
-			<div>
+			<div className="space-y-4">
 				{categories &&
 					categories.map((categ, index) => (
 						<li

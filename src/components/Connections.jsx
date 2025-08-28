@@ -55,9 +55,9 @@ const Connections = ({ status }) => {
 	return (
 		<div className="w-full m-10">
 			<ul className="list bg-base-100 rounded-box shadow-md">
-				<li className="p-4 pb-2 text-xs opacity-60 tracking-wide">
+				<legend className="fieldset-legend text-2xl font-bold px-2">
 					{status === "sent" ? "Pending connections" : "Connections"}
-				</li>
+				</legend>
 				{connecs.length > 0 ? (
 					connecs.map((c) => (
 						<li className="" key={c._id}>
@@ -126,7 +126,7 @@ const ConnectionView = ({
 						<p>new</p>
 					</div>
 				)}
-				<div className="flex justify-between m-4 px-4 w-full mx-auto">
+				<div className="flex justify-between m-4 px-4 w-full mx-auto space-y-4">
 					<div>
 						<div className="flex items-center">
 							<div>

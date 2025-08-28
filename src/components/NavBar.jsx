@@ -88,7 +88,7 @@ const NavBar = () => {
 		<>
 			<div className="navbar bg-base-100 shadow-sm">
 				<div className="flex-1">
-					<Link to="/" className="btn btn-ghost text-xl">
+					<Link to="/" className="btn btn-ghost text-3xl">
 						miraculous
 					</Link>
 				</div>
@@ -264,8 +264,10 @@ const NavBar = () => {
 			<dialog id="modal_categories" className="modal">
 				<div className="modal-box">
 					<ul className="list bg-base-100 rounded-box">
-						<li className="p-4 pb-2 text-s opacity-60 tracking-wide">
-							All the Categories
+						<li className="p-4 pb-2 text-s  tracking-wide">
+							<legend className="fieldset-legend text-2xl font-bold px-2">
+								All the Categories
+							</legend>
 						</li>
 					</ul>
 					<div className="max-h-96 overflow-y-auto">

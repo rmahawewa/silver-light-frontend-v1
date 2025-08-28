@@ -101,7 +101,10 @@ const NewImage = ({ imageId, handleImageIdChange }) => {
 	return !imageId ? (
 		<div className="flex justify-center py-12">
 			<fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-				<legend className="fieldset-legend">Add new image</legend>
+				{/* <legend className="fieldset-legend">Add new image</legend> */}
+				<legend className="fieldset-legend text-2xl font-bold px-2">
+					Add new image
+				</legend>
 				<label className="label">Image</label>
 				<input
 					type="file"

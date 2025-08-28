@@ -26,7 +26,7 @@ const ImageCard = ({ imageId }) => {
 	const dispatch = useDispatch();
 	const userConnections = useSelector((store) => store.connectionfeed);
 	const image = useSelector((store) =>
-		store.imagefeed.find((img) => img._id === imageId)
+		store?.imagefeed?.find((img) => img?._id === imageId)
 	);
 
 	// console.log(userConnections);

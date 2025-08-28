@@ -34,6 +34,12 @@ const NewPost = ({ post_id, handlePostidChange }) => {
 		console.log(postId);
 	}, [post_id]);
 
+	const makeFieldsEmpty = () => {
+		setTitle("");
+		setCategories([]);
+		setDescription("");
+	};
+
 	const addCategory = () => {
 		if (category !== "") {
 			categories.length < 6 &&
@@ -106,6 +112,7 @@ const NewPost = ({ post_id, handlePostidChange }) => {
 			if (res.data.data._id) {
 				handlePostidChange(res.data.data._id);
 			}
+			makeFieldsEmpty();
 		} catch (err) {
 			console.log(err);
 		}
@@ -116,7 +123,10 @@ const NewPost = ({ post_id, handlePostidChange }) => {
 			{!selectImages ? (
 				<div className="flex justify-center py-12">
 					<fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-						<legend className="fieldset-legend">Add new post</legend>
+						{/* <legend className="fieldset-legend">Add new post</legend> */}
+						<legend className="fieldset-legend text-2xl font-bold px-2">
+							Add new post
+						</legend>
 						{images.length > 0 && (
 							<button
 								className="btn btn-success m-1"
@@ -174,7 +184,17 @@ const NewPost = ({ post_id, handlePostidChange }) => {
 							value={description}
 							onChange={(e) => setDescription(e.target.value)}
 						></textarea>
-						<button className="btn btn-success" onClick={() => handleSubmit()}>
+						<button
+							className="btn btn-success"
+							onClick={() => handleSubmit()}
+							disabled={
+								!(
+									title.length > 0 &&
+									categories.length > 0 &&
+									description.length > 0
+								)
+							}
+						>
 							Add
 						</button>
 					</fieldset>

@@ -26,10 +26,10 @@ const PostCard = ({ postId }) => {
 	// const [postComments, setPostComments] = useState([]);
 	const dispatch = useDispatch();
 	const post = useSelector((store) =>
-		store.postfeed.find((pt) => pt._id === postId)
+		store?.postfeed?.find((pt) => pt?._id === postId)
 	);
 	console.log(post);
-	const userConnections = useSelector((store) => store.connectionfeed);
+	const userConnections = useSelector((store) => store?.connectionfeed);
 	const modalId = `reactions_modal_${postId}`;
 
 	useEffect(() => {
