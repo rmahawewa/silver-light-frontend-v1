@@ -10,21 +10,25 @@ export const GetFeed = async (dispatch, category) => {
 	// if (feedData) return; // this output null
 	console.log(category);
 	try {
-		const res = await axios.post(
-			BASE_URL + "/feed",
-			{ categ: category },
-			{
-				withCredentials: true,
-			}
-		);
-		console.log(res.data);
-		// console.log(res.data.postData);
-		dispatch(addImageFeed(res?.data?.imageData));
-		dispatch(addPostFeed(res?.data?.postData));
-		// const postComments = await axios.get(BASE_URL + "/feed/postcomments", {
-		// 	// operate later
+		// const res = await axios.post(
+		// 	BASE_URL + "/feed",
+		// 	{ categ: category },
+		// 	{
+		// 		withCredentials: true,
+		// 	}
+		// );
+		// console.log(res.data);
+		// const res = await axios.get(BASE_URL + "/feed/" + category, {
 		// 	withCredentials: true,
 		// });
+		const res = await axios.get(BASE_URL + "/feed", {
+			params: {
+				category: category,
+			},
+			withCredentials: true,
+		});
+		dispatch(addImageFeed(res?.data?.imageData));
+		dispatch(addPostFeed(res?.data?.postData));
 	} catch (err) {
 		console.error(err);
 	}
