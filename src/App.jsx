@@ -1,3 +1,4 @@
+import React, { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { reduxStore, persistor } from "./utils/reduxStore";
@@ -18,6 +19,36 @@ import Chat from "./components/Chat";
 import Profile from "./components/Profile";
 
 function App() {
+	const handleLogout = async () => {
+		try {
+			await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
+			dispatch(removeUser());
+			dispatch(removeConnections());
+			dispatch(removePosts());
+			dispatch(removeImage());
+			return navigate("/login");
+		} catch (err) {
+			console.error(err.message);
+		}
+	};
+	// Here is where you should put the beforeunload event listener
+	useEffect(() => {
+		const handleBeforeUnload = async () => {
+			try {
+				handleLogout();
+			} catch (error) {
+				console.error("Logout failed on tab close:", error);
+			}
+		};
+
+		window.addEventListener("beforeunload", handleBeforeUnload);
+
+		// This is the cleanup function that runs when the component unmounts
+		return () => {
+			window.removeEventListener("beforeunload", handleBeforeUnload);
+		};
+	}, []); // The empty dependency array ensures this runs once
+
 	return (
 		<div className="text-info-content/90">
 			<Provider store={reduxStore}>

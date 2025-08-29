@@ -10,23 +10,13 @@ export const GetFeed = async (dispatch, category) => {
 	// if (feedData) return; // this output null
 	console.log(category);
 	try {
-		// const res = await axios.post(
-		// 	BASE_URL + "/feed",
-		// 	{ categ: category },
-		// 	{
-		// 		withCredentials: true,
-		// 	}
-		// );
-		// console.log(res.data);
-		// const res = await axios.get(BASE_URL + "/feed/" + category, {
-		// 	withCredentials: true,
-		// });
 		const res = await axios.get(BASE_URL + "/feed", {
 			params: {
 				category: category,
 			},
 			withCredentials: true,
 		});
+		console.log(res);
 		dispatch(addImageFeed(res?.data?.imageData));
 		dispatch(addPostFeed(res?.data?.postData));
 	} catch (err) {

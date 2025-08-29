@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import ImageCard from "./ImageCard";
 import PostCard from "./PostCard";
 import { GetFeed, GetConnections } from "./UserFunctions/GetFeed";
+import { useNavigate } from "react-router-dom";
 
 // Memoize the child components
 const MemoizedImageCard = memo(ImageCard);
@@ -10,6 +11,7 @@ const MemoizedPostCard = memo(PostCard);
 
 const Feed = () => {
 	const dispatch = useDispatch();
+	const user = useSelector((store) => store.user);
 	const feedData = useSelector((store) => store.imagefeed);
 	const postData = useSelector((store) => store.postfeed);
 	const category = "";
