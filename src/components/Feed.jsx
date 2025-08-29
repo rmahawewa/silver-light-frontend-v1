@@ -18,6 +18,10 @@ const Feed = () => {
 	console.log(feedData);
 	console.log(postData);
 
+	// Add a selector to check for the login status from a new auth slice
+	const isLoggedIn = useSelector((store) => store.auth.isLoggedIn);
+	const navigate = useNavigate();
+
 	// Use useCallback to memoize the dispatch functions
 	const getFeedMemoized = useCallback(() => {
 		GetFeed(dispatch, category);
@@ -31,6 +35,14 @@ const Feed = () => {
 		getFeedMemoized();
 		getConnectionsMemoized();
 	}, [getFeedMemoized, getConnectionsMemoized]);
+
+	// Use a new useEffect to watch for authentication status changes
+	useEffect(() => {
+		// Redirect to login if the user is not authenticated
+		if (isLoggedIn === false) {
+			navigate("/login");
+		}
+	}, [isLoggedIn, navigate]);
 
 	if (!feedData) return null; // Use null for no content
 	if (feedData.length === 0 && (!postData || postData.length === 0))

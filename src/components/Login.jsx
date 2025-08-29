@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
+import { login } from "../utils/authSlice";
 
 const Login = () => {
 	const [firstName, setFirstName] = useState("");
@@ -27,9 +27,12 @@ const Login = () => {
 				},
 				{ withCredentials: true }
 			);
-			console.log(res.data.data);
-			dispatch(addUser(res.data.data));
-			return navigate("/");
+
+			// Dispatch the login action with the user data as the payload
+			dispatch(login(res.data.data));
+
+			// Navigate to the home page
+			navigate("/");
 		} catch (err) {
 			setError(err?.response?.data);
 			console.log(err.response.data);
@@ -50,12 +53,10 @@ const Login = () => {
 				},
 				{ withCredentials: true }
 			);
-			// console.log(res);
 			if (res) {
 				setIsLoggingForm((value) => !value);
 			}
 		} catch (err) {
-			// console.log(err?.response?.data);
 			setError(err?.response?.data);
 		}
 	};

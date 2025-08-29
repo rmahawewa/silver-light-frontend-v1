@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
-import { removeUser } from "../utils/userSlice";
+import { logout } from "../utils/authSlice";
 import axios from "axios";
 import NewImage from "./NewImage";
 import NewPost from "./NewPost";
@@ -13,7 +13,8 @@ import { removePosts } from "../utils/postSlice";
 import { removeImage } from "../utils/imageSlice";
 
 const NavBar = () => {
-	const user = useSelector((store) => store.user);
+	// Select the user from the auth slice
+	const user = useSelector((store) => store.auth.user);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const [itemSwitch, setItemSwitch] = useState("");
@@ -21,14 +22,11 @@ const NavBar = () => {
 	const [imageId, setImageId] = useState("");
 	const [lastVisitedTime, setLastVisitedTime] = useState("");
 
-	const loggedInUsr = useSelector((store) => store.user)?._id;
+	const loggedInUsr = user?._id;
 
 	const connections = useSelector((store) => store?.connectionfeed)?.filter(
 		(c) => c?.createdAt > lastVisitedTime && c?.status === "accepted"
 	);
-	// console.log(connections);
-	// console.log(connections?.length);
-	// console.log(user);
 
 	const handlePostidChange = (value) => {
 		setPostid(value);
@@ -41,10 +39,15 @@ const NavBar = () => {
 	const handleLogout = async () => {
 		try {
 			await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
-			dispatch(removeUser());
+
+			// Dispatch the single logout action
+			dispatch(logout());
+
+			// These other dispatches might also be handled by a global logout action if you want to centralize things further
 			dispatch(removeConnections());
 			dispatch(removePosts());
 			dispatch(removeImage());
+
 			return navigate("/login");
 		} catch (err) {
 			console.error(err.message);
@@ -82,9 +85,10 @@ const NavBar = () => {
 			}
 		};
 		user && processLastVisitedTime();
-	}, []);
+	}, [user, loggedInUsr]); // Add user and loggedInUsr to the dependency array
 
 	return (
+		// The rest of your component remains the same
 		<>
 			<div className="navbar bg-base-100 shadow-sm">
 				<div className="flex-1">
@@ -127,7 +131,6 @@ const NavBar = () => {
 									>
 										New image
 									</span>
-									{/* <Link to="/new-image">New image</Link> */}
 								</li>
 								<li>
 									<span
@@ -139,7 +142,6 @@ const NavBar = () => {
 									>
 										New post
 									</span>
-									{/* <Link to="/new-post">New post</Link> */}
 								</li>
 							</ul>
 						</div>
@@ -150,7 +152,6 @@ const NavBar = () => {
 								document.getElementById("modal_categories").showModal();
 							}}
 						>
-							{/* <Link to="/categories"> */}
 							<div className="indicator">
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
@@ -167,34 +168,7 @@ const NavBar = () => {
 									/>
 								</svg>
 							</div>
-							{/* </Link> */}
 						</button>
-
-						{/* <button
-							className="btn btn-ghost btn-circle tooltip tooltip-left tooltip-primary"
-							data-tip="Notifications"
-						>
-							<div className="indicator">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									className="h-5 w-5"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke="currentColor"
-								>
-									{" "}
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										strokeWidth="2"
-										d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
-									/>{" "}
-								</svg>
-								<span className="badge badge-xs badge-primary indicator-item"></span>
-							</div>
-						</button> */}
-						{/* </div> */}
-
 						<div className="dropdown dropdown-end mx-5">
 							<div
 								tabIndex={0}
@@ -218,7 +192,6 @@ const NavBar = () => {
 								<li>
 									<Link to="/connections" className="justify-between">
 										Connections
-										{/* <span className="badge">New {connections?.length}</span> */}
 									</Link>
 								</li>
 								<li>
@@ -235,8 +208,7 @@ const NavBar = () => {
 					</div>
 				)}
 			</div>
-			{/* Open the modal using document.getElementById('ID').showModal() method */}
-			{/* <button className="btn">open modal</button> */}
+			{/* ... modal content ... */}
 			<dialog id="my_modal_1" className="modal">
 				<div className="modal-box w-11/12 max-w-5xl">
 					{itemSwitch === "image" && (
@@ -253,7 +225,6 @@ const NavBar = () => {
 					)}
 					<div className="modal-action">
 						<form method="dialog">
-							{/* if there is a button in form, it will close the modal */}
 							<div>
 								<button className="btn">Close</button>
 							</div>
