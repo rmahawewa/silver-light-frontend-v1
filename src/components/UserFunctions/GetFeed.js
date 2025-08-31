@@ -6,13 +6,11 @@ import { addPostFeed } from "../../utils/postSlice";
 import { addConnectionFeed } from "../../utils/connectionRequestSlice";
 import { BASE_URL } from "../../utils/constants";
 import { logout } from "../../utils/authSlice";
-import axiosInstance from "../../utils/axiosInstance";
 
 export const GetFeed = async (dispatch, category) => {
-	// if (feedData) return; // this output null
 	console.log(category);
 	try {
-		const res = await axiosInstance.get(BASE_URL + "/feed", {
+		const res = await axios.get(BASE_URL + "/feed", {
 			params: {
 				category: category,
 			},
@@ -22,16 +20,23 @@ export const GetFeed = async (dispatch, category) => {
 		dispatch(addPostFeed(res?.data?.postData));
 	} catch (err) {
 		console.error(err);
-		if (err.response && err.response.status === 401) {
-			console.log("Unauthorized error, navigating to login");
-			dispatch(logout()); // Use the generated logout action from the slice
-		}
+		// Add a check to ensure error.response exists
+		// if (err?.response) {
+		// 	if (err?.response?.status === 401) {
+		// 		console.log("Unauthorized error, navigating to login");
+		// 		dispatch(logout()); // Use the generated logout action from the slice
+		// 	}
+		// } else {
+		// 	// Handle cases where no response was received (e.g., network error)
+		// 	console.log("Network or CORS error occurred.");
+		// 	// You might want to display a user-friendly message here
+		// }
 	}
 };
 
 export const GetConnections = async (dispatch) => {
 	try {
-		const res = await axiosInstance.get(BASE_URL + "/request/user-requests", {
+		const res = await axios.get(BASE_URL + "/request/user-requests", {
 			withCredentials: true,
 		});
 		// Create a new, flattened array from the API response
@@ -42,9 +47,16 @@ export const GetConnections = async (dispatch) => {
 		dispatch(addConnectionFeed(flattenedConnections));
 	} catch (err) {
 		console.error(err);
-		if (err.response && err.response.status === 401) {
-			console.log("Unauthorized error, navigating to login");
-			dispatch(logout()); // Use the generated logout action from the slice
-		}
+		// Add a check to ensure error.response exists
+		// if (err?.response) {
+		// 	if (err?.response?.status === 401) {
+		// 		console.log("Unauthorized error, navigating to login");
+		// 		dispatch(logout()); // Use the generated logout action from the slice
+		// 	}
+		// } else {
+		// 	// Handle cases where no response was received (e.g., network error)
+		// 	console.log("Network or CORS error occurred.");
+		// 	// You might want to display a user-friendly message here
+		// }
 	}
 };

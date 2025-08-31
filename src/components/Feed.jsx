@@ -11,16 +11,35 @@ const MemoizedPostCard = memo(PostCard);
 
 const Feed = () => {
 	const dispatch = useDispatch();
-	const user = useSelector((store) => store.user);
+	const navigate = useNavigate();
+	const userData = useSelector((store) => store.user);
+
+	const fetchUser = async () => {
+		try {
+			const res = await axios.get(BASE_URL + "/profile/view", {
+				withCredentials: true,
+			});
+			// console.log(res.data);
+			dispatch(addUser(res.data));
+		} catch (err) {
+			if (err.status == 401) {
+				navigate("/login");
+			}
+			console.error(err.message);
+		}
+	};
+
+	useEffect(() => {
+		if (!userData) {
+			fetchUser();
+		}
+	}, []);
+
 	const feedData = useSelector((store) => store.imagefeed);
 	const postData = useSelector((store) => store.postfeed);
 	const category = "";
 	console.log(feedData);
 	console.log(postData);
-
-	// Add a selector to check for the login status from a new auth slice
-	const isLoggedIn = useSelector((store) => store.auth.isLoggedIn);
-	const navigate = useNavigate();
 
 	// Use useCallback to memoize the dispatch functions
 	const getFeedMemoized = useCallback(() => {
@@ -35,14 +54,6 @@ const Feed = () => {
 		getFeedMemoized();
 		getConnectionsMemoized();
 	}, [getFeedMemoized, getConnectionsMemoized]);
-
-	// Use a new useEffect to watch for authentication status changes
-	useEffect(() => {
-		// Redirect to login if the user is not authenticated
-		if (isLoggedIn === false) {
-			navigate("/login");
-		}
-	}, [isLoggedIn, navigate]);
 
 	if (!feedData) return null; // Use null for no content
 	if (feedData.length === 0 && (!postData || postData.length === 0))

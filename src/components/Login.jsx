@@ -62,7 +62,7 @@ const Login = () => {
 	};
 
 	return (
-		<div className="flex justify-center py-12">
+		<div className="flex justify-center py-12 ">
 			<fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
 				<legend className="fieldset-legend">
 					{isLoggingForm ? "Login" : "Sign up"}
