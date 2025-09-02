@@ -64,15 +64,21 @@ const Feed = () => {
 			{feedData &&
 				feedData.length > 0 &&
 				feedData.map((img) => (
-					<div key={img._id} className=" flex justify-center py-10">
-						<MemoizedImageCard imageId={img._id} />
+					<div key={img._id}>
+						<div className=" flex justify-center py-10">
+							<MemoizedImageCard imageId={img._id} />
+						</div>
+						<hr />
 					</div>
 				))}
 			{postData &&
 				postData.length > 0 &&
 				postData.map((post) => (
-					<div key={post._id} className="flex justify-center py-10">
-						<MemoizedPostCard postId={post._id} />
+					<div key={post._id}>
+						<div key={post._id} className="flex justify-center py-10">
+							<MemoizedPostCard postId={post._id} />
+						</div>
+						<hr />
 					</div>
 				))}
 		</>
