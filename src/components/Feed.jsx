@@ -68,7 +68,7 @@ const Feed = () => {
 						<div className=" flex justify-center py-10">
 							<MemoizedImageCard imageId={img._id} />
 						</div>
-						<hr />
+						<div className="divider w-2/3 mx-auto divider-neutral-content opacity-60 "></div>
 					</div>
 				))}
 			{postData &&
@@ -78,7 +78,7 @@ const Feed = () => {
 						<div key={post._id} className="flex justify-center py-10">
 							<MemoizedPostCard postId={post._id} />
 						</div>
-						<hr />
+						<div className="divider w-2/3 mx-auto divider-neutral-content opacity-60"></div>
 					</div>
 				))}
 		</>
