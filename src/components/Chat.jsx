@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { createSocketConnection } from "../utils/socket";
 import { useSelector } from "react-redux";
+import { useSocket } from "../context/SocketContext";
 
 const Chat = () => {
 	const { targetUserId, targetUserName } = useParams();

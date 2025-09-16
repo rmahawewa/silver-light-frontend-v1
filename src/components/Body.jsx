@@ -5,6 +5,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { SocketProvider } from "../context/SocketContext"; // Import the provider
 
 const Body = () => {
 	const dispatch = useDispatch();
@@ -30,13 +31,15 @@ const Body = () => {
 		if (!userData) {
 			fetchUser();
 		}
-	}, []);
+	}, [userData, dispatch, navigate]);
 
 	return (
-		<div>
-			<NavBar />
-			<Outlet />
-		</div>
+		<SocketProvider>
+			<div>
+				<NavBar />
+				<Outlet />
+			</div>
+		</SocketProvider>
 	);
 };
 

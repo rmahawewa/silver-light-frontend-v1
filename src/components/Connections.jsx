@@ -9,6 +9,7 @@ import {
 import Message from "./icons/Message";
 import ActiveMessage from "./icons/ActiveMessage";
 import saveVisitedUserInformation from "./UserFunctions/GetPageVisitedTime";
+import { Link } from "react-router-dom";
 
 const Connections = ({ status }) => {
 	const loggedInUsr = useSelector((store) => store.user)?._id;
@@ -142,9 +143,9 @@ const ConnectionView = ({
 					</div>
 
 					<div className="flex items-center justify-between gap-5 px-5">
-						<button className="btn btn-square btn-ghost">
+						<Link to={"/chat/" + conn._id + "/" + conn.userName}>
 							<ActiveMessage />
-						</button>
+						</Link>
 						{status === "sent" && (
 							<div>
 								{direction === "to" ? (

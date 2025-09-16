@@ -20,7 +20,7 @@ const Categories = () => {
 	};
 
 	useEffect(() => {
-		user && getAllCategories() && console.log(user);
+		user && getAllCategories();
 	}, [user]);
 
 	const closeModel = () => {
