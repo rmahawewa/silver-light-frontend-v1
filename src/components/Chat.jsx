@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { useSocket } from "../context/SocketContext";
 
 const Chat = () => {
+	const socket = useSocket(); // Get the socket instance from context
 	const { targetUserId, targetUserName } = useParams();
 
 	const user = useSelector((store) => store.user);
@@ -43,7 +44,8 @@ const Chat = () => {
 	}, []);
 
 	useEffect(() => {
-		const socket = createSocketConnection();
+		if (!socket) return;
+		// const socket = createSocketConnection();
 		//As soon as the page loaded, the socket connection is made and joinChat event is emitted
 		socket.emit("joinChat", {
 			firstName: user.firstName,
@@ -51,20 +53,27 @@ const Chat = () => {
 			targetUserId,
 		});
 
-		socket.on("messageReceived", ({ senderId, firstName, lastName, text }) => {
+		const handleMessage = ({ senderId, firstName, lastName, text }) => {
 			setMessages((messages) => [
 				...messages,
 				{ senderId, firstName, lastName, text },
 			]);
-		});
+		};
+
+		socket.on("messageReceived", handleMessage);
 
 		return () => {
-			socket.disconnect();
+			socket.off("messageReceived", handleMessage);
 		};
-	}, [userId, targetUserId]);
+
+		// return () => {
+		// 	socket.disconnect();
+		// };
+	}, [socket, userId, targetUserId]);
 
 	const sendMessage = () => {
-		const socket = createSocketConnection();
+		// const socket = createSocketConnection();
+		if (!socket) return;
 		socket.emit("sendMessage", {
 			firstName: user.firstName,
 			lastName: user.lastName,

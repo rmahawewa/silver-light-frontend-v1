@@ -11,8 +11,10 @@ import saveVisitedUserInformation from "./UserFunctions/GetPageVisitedTime";
 import { removeConnections } from "../utils/connectionRequestSlice";
 import { removePosts } from "../utils/postSlice";
 import { removeImage } from "../utils/imageSlice";
+import { useSocket } from "../context/SocketContext";
 
 const NavBar = () => {
+	const socket = useSocket();
 	// Select the user from the auth slice
 	const user = useSelector((store) => store.auth.user);
 	const dispatch = useDispatch();
@@ -21,6 +23,7 @@ const NavBar = () => {
 	const [post_id, setPostid] = useState("");
 	const [imageId, setImageId] = useState("");
 	const [lastVisitedTime, setLastVisitedTime] = useState("");
+	const [notifications, setNotifications] = useState([]);
 
 	const loggedInUsr = user?._id;
 
@@ -85,7 +88,32 @@ const NavBar = () => {
 			}
 		};
 		user && processLastVisitedTime();
-	}, [user, loggedInUsr]); // Add user and loggedInUsr to the dependency array
+	}, [loggedInUsr]); // Add user and loggedInUsr to the dependency array
+
+	useEffect(() => {
+		if (!socket) return;
+
+		const handleNotifications = ({
+			notification_id,
+			senderId,
+			sender_name,
+			imageId,
+			type,
+			isRead,
+			time,
+		}) => {
+			setNotifications((prevNotifications) => [
+				...prevNotifications,
+				{ notification_id, senderId, sender_name, imageId, type, isRead, time },
+			]);
+		};
+
+		socket.on("newNotification", handleNotifications);
+
+		return () => {
+			socket.off("newNotification", handleNotifications);
+		};
+	}, [loggedInUsr, socket]);
 
 	return (
 		// The rest of your component remains the same
@@ -98,6 +126,93 @@ const NavBar = () => {
 				</div>
 				{user && (
 					<div className="hidden flex-none lg:block">
+						<div className="dropdown dropdown-hover">
+							<button className="btn btn-ghost btn-circle">
+								<div className="indicator">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="h-5 w-5"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+									>
+										{" "}
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth="2"
+											d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+										/>{" "}
+									</svg>
+									<span className="badge badge-xs badge-primary indicator-item">
+										{notifications.length} {/* 5  number of notifications */}
+									</span>
+								</div>
+							</button>
+							<ul
+								tabIndex={0}
+								className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+							>
+								{notifications &&
+									notifications.map((notification) => (
+										<li key={notification.notification_id}>
+											{notification.type == "reaction" && (
+												<>
+													<span
+													// onClick={() => {
+													// 	handleImageIdChange("");
+													// 	setItemSwitch("image");
+													// 	document.getElementById("my_modal_1").showModal();
+													// }}
+													>
+														{notification.sender_name +
+															" reacted to your collaboration."}
+													</span>
+													<span>{notification.time}</span>
+												</>
+											)}
+											{notification.type == "comment" && (
+												<>
+													<span
+													// onClick={() => {
+													// 	handleImageIdChange("");
+													// 	setItemSwitch("image");
+													// 	document.getElementById("my_modal_1").showModal();
+													// }}
+													>
+														{notification.sender_name +
+															" commented on your collaboration."}
+													</span>
+													<span>{notification.time}</span>
+												</>
+											)}
+											{/* {notification.type == "message" && ()} */}
+										</li>
+									))}
+								<li>
+									<span
+										onClick={() => {
+											handleImageIdChange("");
+											setItemSwitch("image");
+											document.getElementById("my_modal_1").showModal();
+										}}
+									>
+										New image
+									</span>
+								</li>
+								<li>
+									<span
+										onClick={() => {
+											handlePostidChange("");
+											setItemSwitch("post");
+											document.getElementById("my_modal_1").showModal();
+										}}
+									>
+										New post
+									</span>
+								</li>
+							</ul>
+						</div>
 						<div className="dropdown dropdown-hover">
 							<button className="btn btn-ghost btn-circle">
 								<div className="indicator">
@@ -169,6 +284,7 @@ const NavBar = () => {
 								</svg>
 							</div>
 						</button>
+
 						<div className="dropdown dropdown-end mx-5">
 							<div
 								tabIndex={0}
