@@ -13,7 +13,7 @@ import { removePosts } from "../utils/postSlice";
 import { removeImage } from "../utils/imageSlice";
 import { useSocket } from "../context/SocketContext";
 
-const NavBar = () => {
+const NavBar = ({ notifications, setNotifications }) => {
 	const socket = useSocket();
 	// Select the user from the auth slice
 	const user = useSelector((store) => store.auth.user);
@@ -23,7 +23,6 @@ const NavBar = () => {
 	const [post_id, setPostid] = useState("");
 	const [imageId, setImageId] = useState("");
 	const [lastVisitedTime, setLastVisitedTime] = useState("");
-	const [notifications, setNotifications] = useState([]);
 
 	const loggedInUsr = user?._id;
 
@@ -90,31 +89,6 @@ const NavBar = () => {
 		user && processLastVisitedTime();
 	}, [loggedInUsr]); // Add user and loggedInUsr to the dependency array
 
-	useEffect(() => {
-		if (!socket) return;
-
-		const handleNotifications = ({
-			notification_id,
-			senderId,
-			sender_name,
-			imageId,
-			type,
-			isRead,
-			time,
-		}) => {
-			setNotifications((prevNotifications) => [
-				...prevNotifications,
-				{ notification_id, senderId, sender_name, imageId, type, isRead, time },
-			]);
-		};
-
-		socket.on("newNotification", handleNotifications);
-
-		return () => {
-			socket.off("newNotification", handleNotifications);
-		};
-	}, [loggedInUsr, socket]);
-
 	return (
 		// The rest of your component remains the same
 		<>
@@ -166,7 +140,7 @@ const NavBar = () => {
 													// }}
 													>
 														{notification.sender_name +
-															" reacted to your collaboration."}
+															" reacted to your work."}
 													</span>
 													<span>{notification.time}</span>
 												</>
