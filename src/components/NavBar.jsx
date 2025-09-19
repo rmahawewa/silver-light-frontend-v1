@@ -12,8 +12,10 @@ import { removeConnections } from "../utils/connectionRequestSlice";
 import { removePosts } from "../utils/postSlice";
 import { removeImage } from "../utils/imageSlice";
 import { useSocket } from "../context/SocketContext";
+import ImageCard from "./ImageCard";
+import { addNotifications } from "../utils/notificationSlice";
 
-const NavBar = ({ notifications, setNotifications }) => {
+const NavBar = () => {
 	const socket = useSocket();
 	// Select the user from the auth slice
 	const user = useSelector((store) => store.auth.user);
@@ -23,12 +25,16 @@ const NavBar = ({ notifications, setNotifications }) => {
 	const [post_id, setPostid] = useState("");
 	const [imageId, setImageId] = useState("");
 	const [lastVisitedTime, setLastVisitedTime] = useState("");
+	const [reactionFor, setReactionFor] = useState("");
+	const [notificationImagePostId, setNotificationImagePostId] = useState("");
 
 	const loggedInUsr = user?._id;
 
 	const connections = useSelector((store) => store?.connectionfeed)?.filter(
 		(c) => c?.createdAt > lastVisitedTime && c?.status === "accepted"
 	);
+
+	const notifications = useSelector((store) => store?.notificationfeed);
 
 	const handlePostidChange = (value) => {
 		setPostid(value);
@@ -54,6 +60,16 @@ const NavBar = ({ notifications, setNotifications }) => {
 		} catch (err) {
 			console.error(err.message);
 		}
+	};
+
+	const removeCheckedNotification = (notificationId) => {
+		// setNotifications((n) =>
+		// 	n.filter((notif) => notif.notification_id !== notificationId)
+		// );
+		let notifs = notifications.filter(
+			(notif) => notif.notification_id !== notificationId
+		);
+		dispatch(addNotifications(notifs));
 	};
 
 	useEffect(() => {
@@ -100,7 +116,7 @@ const NavBar = ({ notifications, setNotifications }) => {
 				</div>
 				{user && (
 					<div className="hidden flex-none lg:block">
-						<div className="dropdown dropdown-hover">
+						<div className="dropdown dropdown-hover mx-10">
 							<button className="btn btn-ghost btn-circle">
 								<div className="indicator">
 									<svg
@@ -125,24 +141,45 @@ const NavBar = ({ notifications, setNotifications }) => {
 							</button>
 							<ul
 								tabIndex={0}
-								className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+								className="dropdown-content menu bg-base-100 rounded-box z-1 w-75 p-2 shadow-sm"
 							>
 								{notifications &&
 									notifications.map((notification) => (
-										<li key={notification.notification_id}>
+										<li
+											key={notification.notification_id}
+											className="bg-base-200 my-1"
+										>
 											{notification.type == "reaction" && (
 												<>
 													<span
-													// onClick={() => {
-													// 	handleImageIdChange("");
-													// 	setItemSwitch("image");
-													// 	document.getElementById("my_modal_1").showModal();
-													// }}
+														onClick={() => {
+															setReactionFor(notification.category);
+															notification.category == "image" &&
+																setNotificationImagePostId(
+																	notification.imageId
+																);
+															// notification.category == "post" &&
+															// 	setNotificationImagePostId(
+															// 		notification.postId
+															// 	);
+															document
+																.getElementById("modal_notifications")
+																.showModal();
+															removeCheckedNotification(
+																notification.notification_id
+															);
+														}}
 													>
-														{notification.sender_name +
-															" reacted to your work."}
+														<div>
+															<p>
+																{notification.sender_name +
+																	" reacted to your " +
+																	notification.category}
+															</p>
+															<p>{notification.value}</p>
+															<p>{notification.time}</p>
+														</div>
 													</span>
-													<span>{notification.time}</span>
 												</>
 											)}
 											{notification.type == "comment" && (
@@ -163,31 +200,9 @@ const NavBar = ({ notifications, setNotifications }) => {
 											{/* {notification.type == "message" && ()} */}
 										</li>
 									))}
-								<li>
-									<span
-										onClick={() => {
-											handleImageIdChange("");
-											setItemSwitch("image");
-											document.getElementById("my_modal_1").showModal();
-										}}
-									>
-										New image
-									</span>
-								</li>
-								<li>
-									<span
-										onClick={() => {
-											handlePostidChange("");
-											setItemSwitch("post");
-											document.getElementById("my_modal_1").showModal();
-										}}
-									>
-										New post
-									</span>
-								</li>
 							</ul>
 						</div>
-						<div className="dropdown dropdown-hover">
+						<div className="dropdown dropdown-hover  mx-10">
 							<button className="btn btn-ghost btn-circle">
 								<div className="indicator">
 									<svg
@@ -235,7 +250,7 @@ const NavBar = ({ notifications, setNotifications }) => {
 							</ul>
 						</div>
 						<button
-							className="btn btn-ghost btn-circle tooltip tooltip-left tooltip-primary"
+							className="btn btn-ghost btn-circle tooltip tooltip-left tooltip-primary mx-10"
 							data-tip="Categories"
 							onClick={() => {
 								document.getElementById("modal_categories").showModal();
@@ -259,7 +274,7 @@ const NavBar = ({ notifications, setNotifications }) => {
 							</div>
 						</button>
 
-						<div className="dropdown dropdown-end mx-5">
+						<div className="dropdown dropdown-end  mx-10">
 							<div
 								tabIndex={0}
 								role="button"
@@ -340,6 +355,27 @@ const NavBar = ({ notifications, setNotifications }) => {
 				<form method="dialog" className="modal-backdrop">
 					<button>close</button>
 				</form>
+			</dialog>
+			<dialog id="modal_notifications" className="modal">
+				<div className="modal-box w-11/12 max-w-5xl">
+					{reactionFor === "image" && (
+						<div className=" flex justify-center py-10">
+							<ImageCard imageId={notificationImagePostId} />
+						</div>
+					)}
+					{reactionFor === "post" && (
+						<div className=" flex justify-center py-10">
+							{/* <PostCard postId={postId} /> */}
+						</div>
+					)}
+					<div className="modal-action">
+						<form method="dialog">
+							<div>
+								<button className="btn">Close</button>
+							</div>
+						</form>
+					</div>
+				</div>
 			</dialog>
 		</>
 	);

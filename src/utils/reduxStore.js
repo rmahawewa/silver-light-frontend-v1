@@ -3,6 +3,7 @@ import imagefeedReducer from "./imageSlice";
 import postfeedReducer from "./postSlice";
 import connectionfeedReducer from "./connectionRequestSlice";
 import authReducer from "./authSlice";
+import notificationfeedReducer from "./notificationSlice";
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import {
 	persistStore,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
 	connectionfeed: connectionfeedReducer,
 	postfeed: postfeedReducer,
 	auth: authReducer,
+	notificationfeed: notificationfeedReducer,
 	// ...other reducers
 });
 
@@ -29,7 +31,14 @@ const persistConfig = {
 	key: "root", // key for the storage
 	version: 1,
 	storage, // which storage to use (localStorage, sessionStorage, etc.)
-	whitelist: ["user", "imagefeed", "connectionfeed", "postfeed", "auth"], // only 'user' reducer will be persisted
+	whitelist: [
+		"user",
+		"imagefeed",
+		"connectionfeed",
+		"postfeed",
+		"auth",
+		"notificationfeed",
+	], // only 'user' reducer will be persisted
 	// blacklist: ['someOtherReducer'], // exclude some reducers from being persisted
 };
 

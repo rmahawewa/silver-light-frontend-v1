@@ -2,12 +2,18 @@ import React, { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import NavBar from "./NavBar";
 import { useSocket } from "../context/SocketContext";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+	addNotifications,
+	addOneNotification,
+} from "../utils/notificationSlice";
 
 const MainContent = () => {
 	const userData = useSelector((store) => store.user);
 	const socket = useSocket();
-	const [notifications, setNotifications] = useState([]);
+	// const [notifications, setNotifications] = useState([]);
+	const dispatch = useDispatch();
+	const notifications = useSelector((store) => store?.notificationfeed);
 
 	useEffect(() => {
 		if (userData && socket) {
@@ -22,27 +28,62 @@ const MainContent = () => {
 
 		const handleNotifications = ({
 			notification_id,
-			photoId,
 			senderId,
 			sender_name,
 			imageId,
+			postId,
 			type,
-			isRead,
+			value,
+			category,
+			// isRead,
 			time,
 		}) => {
-			setNotifications((prevNotifications) => [
-				...prevNotifications,
-				{
-					notification_id,
-					photoId,
-					senderId,
-					sender_name,
-					imageId,
-					type,
-					isRead,
-					time,
-				},
-			]);
+			// setNotifications((prevNotifications) => [
+			// 	...prevNotifications,
+			// 	{
+			// 		notification_id,
+			// 		senderId,
+			// 		sender_name,
+			// 		imageId,
+			// 		postId,
+			// 		type,
+			// 		value,
+			// 		category,
+			// 		// isRead,
+			// 		time,
+			// 	},
+			// ]);
+			if (!notifications) {
+				dispatch(
+					addNotifications({
+						notification_id,
+						senderId,
+						sender_name,
+						imageId,
+						postId,
+						type,
+						value,
+						category,
+						// isRead,
+						time,
+					})
+				);
+			} else {
+				dispatch(
+					addOneNotification({
+						notification_id,
+						senderId,
+						sender_name,
+						imageId,
+						postId,
+						type,
+						value,
+						category,
+						// isRead,
+						time,
+					})
+				);
+			}
 		};
 
 		socket.on("newNotification", handleNotifications);
@@ -50,14 +91,15 @@ const MainContent = () => {
 		return () => {
 			socket.off("newNotification", handleNotifications);
 		};
-	}, [socket]);
+	}, [socket, notifications]);
+
+	useEffect(() => {
+		dispatch(addNotifications(notifications));
+	}, [notifications]);
 
 	return (
 		<div>
-			<NavBar
-				notifications={notifications}
-				setNotifications={setNotifications}
-			/>
+			<NavBar />
 			<Outlet />
 		</div>
 	);
