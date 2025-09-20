@@ -14,6 +14,7 @@ import { removeImage } from "../utils/imageSlice";
 import { useSocket } from "../context/SocketContext";
 import ImageCard from "./ImageCard";
 import { addNotifications } from "../utils/notificationSlice";
+import PostCard from "./PostCard";
 
 const NavBar = () => {
 	const socket = useSocket();
@@ -33,7 +34,7 @@ const NavBar = () => {
 	const connections = useSelector((store) => store?.connectionfeed)?.filter(
 		(c) => c?.createdAt > lastVisitedTime && c?.status === "accepted"
 	);
-
+	// Notifications were dispatched in MainContent.js
 	const notifications = useSelector((store) => store?.notificationfeed);
 
 	const handlePostidChange = (value) => {
@@ -158,10 +159,8 @@ const NavBar = () => {
 																setNotificationImagePostId(
 																	notification.imageId
 																);
-															// notification.category == "post" &&
-															// 	setNotificationImagePostId(
-															// 		notification.postId
-															// 	);
+															notification.category == "post" &&
+																setNotificationImagePostId(notification.postId);
 															document
 																.getElementById("modal_notifications")
 																.showModal();
@@ -365,7 +364,7 @@ const NavBar = () => {
 					)}
 					{reactionFor === "post" && (
 						<div className=" flex justify-center py-10">
-							{/* <PostCard postId={postId} /> */}
+							<PostCard postId={notificationImagePostId} />
 						</div>
 					)}
 					<div className="modal-action">

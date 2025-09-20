@@ -38,21 +38,6 @@ const MainContent = () => {
 			// isRead,
 			time,
 		}) => {
-			// setNotifications((prevNotifications) => [
-			// 	...prevNotifications,
-			// 	{
-			// 		notification_id,
-			// 		senderId,
-			// 		sender_name,
-			// 		imageId,
-			// 		postId,
-			// 		type,
-			// 		value,
-			// 		category,
-			// 		// isRead,
-			// 		time,
-			// 	},
-			// ]);
 			if (!notifications) {
 				dispatch(
 					addNotifications({
