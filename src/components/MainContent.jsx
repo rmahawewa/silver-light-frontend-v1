@@ -38,7 +38,7 @@ const MainContent = () => {
 			// isRead,
 			time,
 		}) => {
-			if (!notifications) {
+			if (notifications.length === 0) {
 				dispatch(
 					addNotifications({
 						notification_id,
