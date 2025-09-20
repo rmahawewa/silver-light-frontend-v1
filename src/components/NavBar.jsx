@@ -144,48 +144,50 @@ const NavBar = () => {
 									</span>
 								</div>
 							</button>
-							{/* <ul
+							<ul
 								tabIndex={0}
 								className="dropdown-content menu bg-base-100 rounded-box z-1 w-75 p-2 shadow-sm"
 							>
 								{notifications &&
-									notifications.map((notification) => (
+									notifications?.map((notification) => (
 										<li
-											key={notification.notification_id}
+											key={notification?.notification_id}
 											className="bg-base-200 my-1"
 										>
-											{notification.type == "reaction" && (
+											{notification?.type == "reaction" && (
 												<>
 													<span
 														onClick={() => {
 															setReactionFor(notification.category);
 															notification.category == "image" &&
 																setNotificationImagePostId(
-																	notification.imageId
+																	notification?.imageId
 																);
-															notification.category == "post" &&
-																setNotificationImagePostId(notification.postId);
+															notification?.category == "post" &&
+																setNotificationImagePostId(
+																	notification?.postId
+																);
 															document
 																.getElementById("modal_notifications")
 																.showModal();
 															removeCheckedNotification(
-																notification.notification_id
+																notification?.notification_id
 															);
 														}}
 													>
 														<div>
 															<p>
-																{notification.sender_name +
+																{notification?.sender_name +
 																	" reacted to your " +
-																	notification.category}
+																	notification?.category}
 															</p>
-															<p>{notification.value}</p>
-															<p>{notification.time}</p>
+															<p>{notification?.value}</p>
+															<p>{notification?.time}</p>
 														</div>
 													</span>
 												</>
 											)}
-											{notification.type == "comment" && (
+											{notification?.type == "comment" && (
 												<>
 													<span
 													// onClick={() => {
@@ -194,16 +196,16 @@ const NavBar = () => {
 													// 	document.getElementById("my_modal_1").showModal();
 													// }}
 													>
-														{notification.sender_name +
+														{notification?.sender_name +
 															" commented on your collaboration."}
 													</span>
-													<span>{notification.time}</span>
+													<span>{notification?.time}</span>
 												</>
 											)}
-											{/* {notification.type == "message" && ()} */}
-							{/*	</li>
+											{/* {notification?.type == "message" && ()} */}
+										</li>
 									))}
-							</ul> */}
+							</ul>
 						</div>
 						<div className="dropdown dropdown-hover  mx-10">
 							<button className="btn btn-ghost btn-circle">
