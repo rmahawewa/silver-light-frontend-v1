@@ -31,7 +31,11 @@ const NavBar = () => {
 
 	const loggedInUsr = user?._id;
 
-	const connections = useSelector((store) => store?.connectionfeed)?.filter(
+	// Select the raw connectionfeed data first
+	const rawConnections = useSelector((store) => store?.connectionfeed);
+
+	// Then, filter the connections outside of the useSelector hook
+	const connections = rawConnections?.filter(
 		(c) => c?.createdAt > lastVisitedTime && c?.status === "accepted"
 	);
 	// Notifications were dispatched in MainContent.js

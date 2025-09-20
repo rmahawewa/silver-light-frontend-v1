@@ -8,8 +8,12 @@ const notificationSlice = createSlice({
 			return action.payload;
 		},
 		addOneNotification: (state, action) => {
-			state = [...state, action.payload];
-			return state;
+			// Correct way: Return the new array
+			// Check if state is null and handle it, otherwise add the new item
+			if (state === null) {
+				return [action.payload];
+			}
+			return [...state, action.payload];
 		},
 	},
 });

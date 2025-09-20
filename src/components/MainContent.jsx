@@ -76,11 +76,11 @@ const MainContent = () => {
 		return () => {
 			socket.off("newNotification", handleNotifications);
 		};
-	}, [socket, notifications]);
+	}, [socket, notifications.dispatch]);
 
-	useEffect(() => {
-		dispatch(addNotifications(notifications));
-	}, [notifications]);
+	// useEffect(() => {
+	// 	dispatch(addNotifications(notifications));
+	// }, [notifications]);
 
 	return (
 		<div>
