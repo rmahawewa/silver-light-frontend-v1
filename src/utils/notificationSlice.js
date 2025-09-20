@@ -5,7 +5,7 @@ const notificationSlice = createSlice({
 	initialState: [],
 	reducers: {
 		addNotifications: (state, action) => {
-			return action.payload;
+			return [action.payload];
 		},
 		addOneNotification: (state, action) => {
 			// Correct way: Return the new array
