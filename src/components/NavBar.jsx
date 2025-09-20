@@ -136,7 +136,7 @@ const NavBar = () => {
 										/>{" "}
 									</svg>
 									<span className="badge badge-xs badge-primary indicator-item">
-										{notifications.length} {/* 5  number of notifications */}
+										{notifications?.length} {/* 5  number of notifications */}
 									</span>
 								</div>
 							</button>
