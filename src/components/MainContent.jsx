@@ -4,16 +4,46 @@ import NavBar from "./NavBar";
 import { useSocket } from "../context/SocketContext";
 import { useDispatch, useSelector } from "react-redux";
 import {
+	addInitiallyFromDB,
 	addNotifications,
 	addOneNotification,
 } from "../utils/notificationSlice";
+import axios from "axios";
+import { BASE_URL } from "../utils/constants";
 
 const MainContent = () => {
-	const userData = useSelector((store) => store.user);
+	// const userData = useSelector((store) => store.user);
+	const userData = useSelector((store) => store.auth.user);
 	const socket = useSocket();
 	// const [notifications, setNotifications] = useState([]);
 	const dispatch = useDispatch();
 	const notifications = useSelector((store) => store?.notificationfeed);
+
+	const unreadNotifications = async () => {
+		try {
+			const res = await axios.get(BASE_URL + "/notifications/unread", {
+				withCredentials: true,
+			});
+			console.log(res.data.data);
+			const unreadNotifications = res.data.data;
+			if (!notifications) {
+				dispatch(addInitiallyFromDB(unreadNotifications));
+			} else {
+				unreadNotifications.map((n) => {
+					const isPresent = notifications.some((elem) => elem._id === n._id);
+					if (!isPresent) dispatch(addOneNotification(n));
+				});
+			}
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	useEffect(() => {
+		if (userData) {
+			unreadNotifications();
+		}
+	}, [userData]);
 
 	useEffect(() => {
 		if (userData && socket) {
@@ -27,47 +57,52 @@ const MainContent = () => {
 		if (!socket) return;
 
 		const handleNotifications = ({
-			notification_id,
+			// _id,
+			_id,
+			recipientId,
 			senderId,
-			sender_name,
+			// sender_name,
 			imageId,
 			postId,
 			type,
 			value,
+			isRead,
 			category,
-			// isRead,
-			time,
+			createdAt,
 		}) => {
-			if (notifications.length === 0) {
+			if (!notifications) {
 				dispatch(
 					addNotifications({
-						notification_id,
+						_id,
+						recipientId,
 						senderId,
-						sender_name,
 						imageId,
 						postId,
 						type,
 						value,
+						isRead,
 						category,
-						// isRead,
-						time,
+						createdAt,
 					})
 				);
 			} else {
-				dispatch(
-					addOneNotification({
-						notification_id,
-						senderId,
-						sender_name,
-						imageId,
-						postId,
-						type,
-						value,
-						category,
-						// isRead,
-						time,
-					})
-				);
+				const isPresent = notifications.some((elem) => elem._id === _id);
+				if (!isPresent) {
+					dispatch(
+						addOneNotification({
+							_id,
+							recipientId,
+							senderId,
+							imageId,
+							postId,
+							type,
+							value,
+							isRead,
+							category,
+							createdAt,
+						})
+					);
+				}
 			}
 		};
 
@@ -76,7 +111,7 @@ const MainContent = () => {
 		return () => {
 			socket.off("newNotification", handleNotifications);
 		};
-	}, [socket, notifications.dispatch]);
+	}, [socket, notifications, dispatch]);
 
 	// useEffect(() => {
 	// 	dispatch(addNotifications(notifications));

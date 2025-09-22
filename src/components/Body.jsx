@@ -11,7 +11,7 @@ import MainContent from "./MainContent";
 const Body = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const userData = useSelector((store) => store.user);
+	const userData = useSelector((store) => store.auth.user);
 
 	const fetchUser = async () => {
 		try {

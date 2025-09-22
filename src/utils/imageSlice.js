@@ -10,7 +10,7 @@ const imageSlice = createSlice({
 		savereaction: (state, action) => {
 			const reaction = action.payload;
 			console.log(reaction);
-			const photo = state.find((photo) => photo._id === reaction.photoId);
+			const photo = state.find((photo) => photo?._id === reaction?.photoId);
 			if (!photo) {
 				console.warn(
 					`Image with ${reaction.photoId} not found. Cannot save reaction`

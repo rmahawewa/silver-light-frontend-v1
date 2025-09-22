@@ -12,7 +12,8 @@ const MemoizedPostCard = memo(PostCard);
 const Feed = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const userData = useSelector((store) => store.user);
+	// const userData = useSelector((store) => store.user);
+	const userData = useSelector((store) => store.auth.user);
 
 	const fetchUser = async () => {
 		try {

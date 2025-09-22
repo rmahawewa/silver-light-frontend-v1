@@ -13,8 +13,12 @@ import { removePosts } from "../utils/postSlice";
 import { removeImage } from "../utils/imageSlice";
 import { useSocket } from "../context/SocketContext";
 import ImageCard from "./ImageCard";
-import { addNotifications } from "../utils/notificationSlice";
+import {
+	addNotifications,
+	removeNotification,
+} from "../utils/notificationSlice";
 import PostCard from "./PostCard";
+// import { removeUser } from "../utils/userSlice";
 
 const NavBar = () => {
 	const socket = useSocket();
@@ -57,9 +61,11 @@ const NavBar = () => {
 			dispatch(logout());
 
 			// These other dispatches might also be handled by a global logout action if you want to centralize things further
+			// dispatch(removeUser());
 			dispatch(removeConnections());
 			dispatch(removePosts());
 			dispatch(removeImage());
+			dispatch(removeNotification());
 
 			return navigate("/login");
 		} catch (err) {
@@ -69,11 +75,9 @@ const NavBar = () => {
 
 	const removeCheckedNotification = (notificationId) => {
 		// setNotifications((n) =>
-		// 	n.filter((notif) => notif.notification_id !== notificationId)
+		// 	n.filter((notif) => notif._id !== notificationId)
 		// );
-		let notifs = notifications.filter(
-			(notif) => notif.notification_id !== notificationId
-		);
+		let notifs = notifications.filter((notif) => notif._id !== notificationId);
 		dispatch(addNotifications(notifs));
 	};
 
@@ -148,12 +152,9 @@ const NavBar = () => {
 								tabIndex={0}
 								className="dropdown-content menu bg-base-100 rounded-box z-1 w-75 p-2 shadow-sm"
 							>
-								{notifications.length > 0 &&
+								{notifications &&
 									notifications?.map((notification) => (
-										<li
-											key={notification?.notification_id}
-											className="bg-base-200 my-1"
-										>
+										<li key={notification?._id} className="bg-base-200 my-1">
 											{notification?.type == "reaction" && (
 												<>
 													<span
@@ -170,19 +171,21 @@ const NavBar = () => {
 															document
 																.getElementById("modal_notifications")
 																.showModal();
-															removeCheckedNotification(
-																notification?.notification_id
-															);
+															removeCheckedNotification(notification?._id);
 														}}
 													>
 														<div>
 															<p>
-																{notification?.sender_name +
+																{notification?.senderId.userName +
 																	" reacted to your " +
 																	notification?.category}
 															</p>
 															<p>{notification?.value}</p>
-															<p>{notification?.time}</p>
+															<p>
+																{notification?.updatedAt
+																	? notification?.updatedAt
+																	: notification?.createdAt}
+															</p>
 														</div>
 													</span>
 												</>
@@ -196,7 +199,7 @@ const NavBar = () => {
 													// 	document.getElementById("my_modal_1").showModal();
 													// }}
 													>
-														{notification?.sender_name +
+														{notification?.senderId.userName +
 															" commented on your collaboration."}
 													</span>
 													<span>{notification?.time}</span>

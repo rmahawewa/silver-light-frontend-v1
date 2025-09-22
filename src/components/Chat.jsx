@@ -10,7 +10,8 @@ const Chat = () => {
 	const socket = useSocket(); // Get the socket instance from context
 	const { targetUserId, targetUserName } = useParams();
 
-	const user = useSelector((store) => store.user);
+	// const user = useSelector((store) => store.user);
+	const user = useSelector((store) => store.auth.user);
 	const [newMessage, setNewMessage] = useState("");
 	const userId = user?._id;
 	const [messages, setMessages] = useState([]);

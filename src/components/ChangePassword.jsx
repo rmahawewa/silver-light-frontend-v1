@@ -5,7 +5,8 @@ import { BASE_URL } from "../utils/constants";
 import { addUser } from "../utils/userSlice";
 
 const ChangePassword = () => {
-	const user = useSelector((store) => store.user);
+	// const user = useSelector((store) => store.user);
+	const user = useSelector((store) => store.auth.user);
 	console.log(user);
 
 	const dispatch = useDispatch();

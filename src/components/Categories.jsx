@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Categories = () => {
-	const user = useSelector((store) => store.user)?._id;
+	// const user = useSelector((store) => store.user)?._id;
+	const user = useSelector((store) => store.auth.user)?._id;
 	const [categories, setCategories] = useState([]);
 	const getAllCategories = async () => {
 		try {

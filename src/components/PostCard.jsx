@@ -19,7 +19,8 @@ import {
 import ReactorsList from "./ReactorsList";
 
 const PostCard = ({ postId }) => {
-	const user = useSelector((store) => store.user);
+	// const user = useSelector((store) => store.user);
+	const user = useSelector((store) => store.auth.user);
 	const [reaction, setReaction] = useState("");
 	const [reactors, setReactors] = useState([]);
 	// const [comment, setComment] = useState("");

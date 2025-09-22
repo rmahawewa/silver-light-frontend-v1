@@ -7,7 +7,8 @@ import { format } from "date-fns";
 
 const Profile = () => {
 	const [isEditable, setIsEditable] = useState(true);
-	const user = useSelector((store) => store.user);
+	// const user = useSelector((store) => store.user);
+	const user = useSelector((store) => store.auth.user);
 	const dispatch = useDispatch();
 
 	// State for all user input fields

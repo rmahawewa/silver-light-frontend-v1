@@ -99,7 +99,8 @@ const CommentTree = ({ postId, commentId, comments, findPostComments }) => {
 		: // : format(currentComment?.createdAt, "yyyy/MM/dd");
 		  currentComment?.createdAt;
 
-	const user = useSelector((store) => store.user)?._id;
+	// const user = useSelector((store) => store.user)?._id;
+	const user = useSelector((store) => store.auth.user)?._id;
 	const dispatch = useDispatch();
 	const userConnections = useSelector((store) => store.connectionfeed);
 

@@ -19,7 +19,8 @@ import GetConnectionStatus from "./UserFunctions/GetConnectionStatus";
 import ReactorsList from "./ReactorsList";
 
 const ImageCard = ({ imageId }) => {
-	const user = useSelector((store) => store.user);
+	// const user = useSelector((store) => store.user);
+	const user = useSelector((store) => store.auth.user);
 	const [reaction, setReaction] = useState("");
 	const [reactors, setReactors] = useState([]);
 	// const [reactionCount, setReactionCount] = useState(0);
@@ -71,6 +72,7 @@ const ImageCard = ({ imageId }) => {
 				{ photoId: image._id, reaction: r },
 				{ withCredentials: true }
 			);
+			console.log(res.data.data);
 			dispatch(savereaction(res.data.data));
 			// findSimilarReactionCount();
 		} catch (err) {

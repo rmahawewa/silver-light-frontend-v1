@@ -18,7 +18,7 @@ import {
 import storage from "redux-persist/lib/storage"; // defaults to localStorage for web
 
 const rootReducer = combineReducers({
-	user: userReducer,
+	// user: userReducer,
 	imagefeed: imagefeedReducer,
 	connectionfeed: connectionfeedReducer,
 	postfeed: postfeedReducer,
@@ -32,7 +32,7 @@ const persistConfig = {
 	version: 1,
 	storage, // which storage to use (localStorage, sessionStorage, etc.)
 	whitelist: [
-		"user",
+		// "user",
 		"imagefeed",
 		"connectionfeed",
 		"postfeed",

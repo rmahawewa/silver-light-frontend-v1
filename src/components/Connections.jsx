@@ -12,7 +12,8 @@ import saveVisitedUserInformation from "./UserFunctions/GetPageVisitedTime";
 import { Link } from "react-router-dom";
 
 const Connections = ({ status }) => {
-	const loggedInUsr = useSelector((store) => store.user)?._id;
+	// const loggedInUsr = useSelector((store) => store.user)?._id;
+	const loggedInUsr = useSelector((store) => store.auth.user)?._id;
 	console.log(loggedInUsr);
 	const connecs = useSelector((store) => store.connectionfeed)?.filter(
 		(c) => c?.status === status
