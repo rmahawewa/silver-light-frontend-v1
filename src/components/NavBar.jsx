@@ -15,6 +15,7 @@ import { useSocket } from "../context/SocketContext";
 import ImageCard from "./ImageCard";
 import {
 	addNotifications,
+	rearrangeNotification,
 	removeNotification,
 } from "../utils/notificationSlice";
 import PostCard from "./PostCard";
@@ -73,12 +74,23 @@ const NavBar = () => {
 		}
 	};
 
-	const removeCheckedNotification = (notificationId) => {
-		// setNotifications((n) =>
-		// 	n.filter((notif) => notif._id !== notificationId)
-		// );
-		let notifs = notifications.filter((notif) => notif._id !== notificationId);
-		dispatch(addNotifications(notifs));
+	const removeCheckedNotification = async (notificationId) => {
+		try {
+			const res = await axios.patch(
+				BASE_URL + "/notifications/changeReadState",
+				{ notificationId: notificationId },
+				{ withCredentials: true }
+			);
+			if (res) {
+				let notifs = notifications.filter(
+					(notif) => notif._id !== notificationId
+				);
+				// console.log(notifs);
+				dispatch(rearrangeNotification(notifs));
+			}
+		} catch (err) {
+			console.log(err);
+		}
 	};
 
 	useEffect(() => {
@@ -168,6 +180,7 @@ const NavBar = () => {
 																setNotificationImagePostId(
 																	notification?.postId
 																);
+															// removeCheckedNotification(notification?._id);
 															document
 																.getElementById("modal_notifications")
 																.showModal();

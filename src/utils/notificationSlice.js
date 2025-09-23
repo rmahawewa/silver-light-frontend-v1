@@ -21,6 +21,9 @@ const notificationSlice = createSlice({
 		removeNotification: (state, action) => {
 			return null;
 		},
+		rearrangeNotification: (state, action) => {
+			return action.payload;
+		},
 	},
 });
 
@@ -29,6 +32,7 @@ export const {
 	addOneNotification,
 	addInitiallyFromDB,
 	removeNotification,
+	rearrangeNotification,
 } = notificationSlice.actions;
 
 export default notificationSlice.reducer;
