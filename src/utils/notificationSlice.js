@@ -22,7 +22,8 @@ const notificationSlice = createSlice({
 			return null;
 		},
 		rearrangeNotification: (state, action) => {
-			return action.payload;
+			state = action.payload;
+			return state;
 		},
 	},
 });

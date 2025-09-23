@@ -85,7 +85,7 @@ const NavBar = () => {
 				let notifs = notifications.filter(
 					(notif) => notif._id !== notificationId
 				);
-				// console.log(notifs);
+				console.log(notifs);
 				dispatch(rearrangeNotification(notifs));
 			}
 		} catch (err) {
