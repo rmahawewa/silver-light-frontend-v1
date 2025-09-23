@@ -22,8 +22,8 @@ const notificationSlice = createSlice({
 			return null;
 		},
 		rearrangeNotification: (state, action) => {
-			state = action.payload;
-			return state;
+			const idToRemove = action.payload;
+			return state.filter((notification) => notification._id !== idToRemove);
 		},
 	},
 });

@@ -82,11 +82,7 @@ const NavBar = () => {
 				{ withCredentials: true }
 			);
 			if (res) {
-				let notifs = notifications.filter(
-					(notif) => notif._id !== notificationId
-				);
-				console.log(notifs);
-				dispatch(rearrangeNotification(notifs));
+				dispatch(rearrangeNotification(notificationId));
 			}
 		} catch (err) {
 			console.log(err);
