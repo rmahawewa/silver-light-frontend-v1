@@ -23,7 +23,11 @@ const notificationSlice = createSlice({
 		},
 		rearrangeNotification: (state, action) => {
 			const idToRemove = action.payload;
-			return state.filter((notification) => notification._id !== idToRemove);
+			if (state && Array.isArray(state)) {
+				return state.filter((notification) => notification._id !== idToRemove);
+			}
+			// If state is not an array, return it as is or an empty array
+			return state || [];
 		},
 	},
 });

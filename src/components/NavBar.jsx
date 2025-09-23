@@ -14,7 +14,6 @@ import { removeImage } from "../utils/imageSlice";
 import { useSocket } from "../context/SocketContext";
 import ImageCard from "./ImageCard";
 import {
-	addNotifications,
 	rearrangeNotification,
 	removeNotification,
 } from "../utils/notificationSlice";
