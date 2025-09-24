@@ -340,6 +340,9 @@ const NavBar = () => {
 									<Link to="/conn-requests">Conn requests</Link>
 								</li>
 								<li>
+									<Link to="/all-chats">All chats</Link>
+								</li>
+								<li>
 									<Link to="/settings">Settings</Link>
 								</li>
 								<li>
