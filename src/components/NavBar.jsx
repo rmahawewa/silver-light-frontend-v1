@@ -201,16 +201,37 @@ const NavBar = () => {
 											{notification?.type == "comment" && (
 												<>
 													<span
-													// onClick={() => {
-													// 	handleImageIdChange("");
-													// 	setItemSwitch("image");
-													// 	document.getElementById("my_modal_1").showModal();
-													// }}
+														onClick={() => {
+															setReactionFor(notification.category);
+															notification.category == "image" &&
+																setNotificationImagePostId(
+																	notification?.imageId
+																);
+															notification?.category == "post" &&
+																setNotificationImagePostId(
+																	notification?.postId
+																);
+															// removeCheckedNotification(notification?._id);
+															document
+																.getElementById("modal_notifications")
+																.showModal();
+															removeCheckedNotification(notification?._id);
+														}}
 													>
-														{notification?.senderId.userName +
-															" commented on your collaboration."}
+														<div>
+															<p>
+																{notification?.senderId.userName +
+																	" commented on your " +
+																	notification?.category}
+															</p>
+															<p>{notification?.value}</p>
+															<p>
+																{notification?.updatedAt
+																	? notification?.updatedAt
+																	: notification?.createdAt}
+															</p>
+														</div>
 													</span>
-													<span>{notification?.time}</span>
 												</>
 											)}
 											{/* {notification?.type == "message" && ()} */}
