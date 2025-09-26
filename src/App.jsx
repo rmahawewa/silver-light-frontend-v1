@@ -19,6 +19,7 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { reduxStore, persistor } from "./utils/reduxStore";
 import ChatList from "./components/ChatList";
+import ChatFeature from "./components/ChatFeature";
 
 function App() {
 	// State to track if the device is considered a desktop.
@@ -63,6 +64,7 @@ function App() {
 											element={<CategoryFeed />}
 										/>
 										<Route path="/all-chats" element={<ChatList />} />
+
 										<Route
 											path="/chat/:targetUserId/:targetUserName"
 											element={<Chat />}

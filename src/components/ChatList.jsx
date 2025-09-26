@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const ChatList = () => {
 	const user = useSelector((store) => store.auth.user);
@@ -26,55 +27,71 @@ const ChatList = () => {
 	}, [user]);
 
 	return (
-		<div>
+		<div className="flex justify-center m-4 px-4 w-full mx-auto space-y-4">
 			<ul className="list bg-base-100 rounded-box shadow-md">
 				<li className="p-4 pb-2 text-xs opacity-60 tracking-wide">Chat list</li>
 				{allChats.map((chat) => {
 					const otherParticipant = chat.participants.find(
-						(p) => p._id !== user._id
+						(p) => p.user._id.toString() !== user._id.toString()
 					);
-					const loggedUser = chat.participants.find((p) => p._id === user._id);
+					const loggedUser = chat.participants.find(
+						(p) => p.user._id.toString() === user._id.toString()
+					);
 					if (otherParticipant) {
+						const targetUserId = otherParticipant.user._id;
+						const targetUserName = otherParticipant.user.userName;
 						return (
 							<li key={chat._id} className="list-row">
-								<div>
-									<img
-										className="size-10 rounded-box"
-										src={otherParticipant.photoUrl}
-									/>
-								</div>
-								<div>
-									<div>{otherParticipant.userName}</div>
-									{/* <div className="text-xs uppercase font-semibold opacity-60">
-									Remaining Reason
-								</div> */}
-								</div>
+								<Link
+									to={"/chat/" + targetUserId + "/" + targetUserName}
+									className="flex items-center w-full gap-60 p-4 hover:bg-base-200 transition-colors"
+								>
+									<div className="flex items-center w-full gap-4 p-4 hover:bg-base-200 transition-colors">
+										<div>
+											<img
+												className="size-10 rounded-box"
+												src={otherParticipant.user.photoUrl}
+											/>
+										</div>
+										<div>
+											<div>{targetUserName}</div>
+										</div>
+									</div>
 
-								<label>7</label>
+									<label>{chat.unreadCount > 0 && chat.unreadCount}</label>
+								</Link>
 							</li>
 						);
 					} else if (loggedUser) {
 						return (
 							<li key={chat._id} className="list-row">
-								<div>
-									<img
-										className="size-10 rounded-box"
-										src={loggedUser.photoUrl}
-									/>
-								</div>
-								<div>
-									<div>{loggedUser.userName}</div>
-									{/* <div className="text-xs uppercase font-semibold opacity-60">
-									Remaining Reason
-								</div> */}
-								</div>
+								<Link
+									to={
+										"/chat/" +
+										loggedUser.user._id +
+										"/" +
+										loggedUser.user.userName
+									}
+									className="flex items-center w-full gap-60 p-4 hover:bg-base-200 transition-colors"
+								>
+									<div className="flex items-center w-full gap-4 p-4 hover:bg-base-200 transition-colors">
+										<div>
+											<img
+												className="size-10 rounded-box"
+												src={loggedUser.user.photoUrl}
+											/>
+										</div>
+										<div>
+											<div>{loggedUser.user.userName}</div>
+										</div>
+									</div>
 
-								<label>7</label>
+									<label>{chat.unreadCount > 0 && chat.unreadCount}</label>
+								</Link>
 							</li>
 						);
 					}
 				})}
-				;
 			</ul>
 		</div>
 	);

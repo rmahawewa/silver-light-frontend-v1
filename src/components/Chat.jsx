@@ -41,6 +41,10 @@ const Chat = () => {
 	};
 
 	useEffect(() => {
+		console.log("Messages state has been updated:", messages);
+	}, [messages]);
+
+	useEffect(() => {
 		fetchChatMessages();
 	}, []);
 
