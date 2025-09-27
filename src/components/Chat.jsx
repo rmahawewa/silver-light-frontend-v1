@@ -16,6 +16,42 @@ const Chat = () => {
 	const userId = user?._id;
 	const [messages, setMessages] = useState([]);
 
+	// API call function to hit the new backend endpoint
+	const markChatAsRead = async () => {
+		try {
+			// Send a PATCH request to the new endpoint
+			const res = await axios.patch(
+				`${BASE_URL}/chat/mark-read/${targetUserId}`,
+				{}, // Empty body, as all necessary data is in the URL and auth header
+				{ withCredentials: true }
+			);
+
+			if (res.data.success) {
+				console.log(`Chat with ${targetUserId} marked as read.`);
+
+				// 💡 ACTION REQUIRED: Dispatch a Redux/Context action here
+				// to update the global unread count badge (e.g., in the header)
+				// and clear the unread count badge for this specific chat in the ChatList.
+			}
+		} catch (err) {
+			console.error("Error marking chat as read:", err);
+		}
+	};
+
+	// UseEffect hook to trigger the action when the chat screen loads
+	useEffect(() => {
+		// Only run the function if we have a targetUserId
+		if (targetUserId) {
+			markChatAsRead();
+		}
+
+		// Clean-up: The function runs when the component mounts and leaves the dependency array empty
+		return () => {
+			// Optional: You could run markChatAsRead() again here
+			// to ensure the latest messages are marked right before the user leaves.
+		};
+	}, [targetUserId]); // Re-run if the target chat changes
+
 	const fetchChatMessages = async () => {
 		try {
 			const chat = await axios.get(BASE_URL + "/chat/" + targetUserId, {
