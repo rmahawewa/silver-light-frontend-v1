@@ -20,6 +20,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { reduxStore, persistor } from "./utils/reduxStore";
 import ChatList from "./components/ChatList";
 import ChatFeature from "./components/ChatFeature";
+import { ChatUnreadProvider } from "./context/ChatUnreadContext";
 
 function App() {
 	// State to track if the device is considered a desktop.
@@ -49,29 +50,31 @@ function App() {
 						{isDesktop ? (
 							<div className="text-info-content/90">
 								{/* <BrowserRouter basename="/"> */}
-								<Routes>
-									<Route path="/" element={<Body />}>
-										<Route path="/" element={<Feed />} />
-										<Route path="/login" element={<Login />} />
-										<Route path="/connections" element={<AllRequests />} />
-										<Route path="/conn-requests" element={<AllRequests />} />
-										<Route path="/settings" element={<Settings />} />
-										<Route path="/new-image" element={<NewImage />} />
-										<Route path="/new-post" element={<NewPost />} />
-										<Route path="/categories" element={<Categories />} />
-										<Route
-											path="/category-feed/:category"
-											element={<CategoryFeed />}
-										/>
-										<Route path="/all-chats" element={<ChatList />} />
+								<ChatUnreadProvider>
+									<Routes>
+										<Route path="/" element={<Body />}>
+											<Route path="/" element={<Feed />} />
+											<Route path="/login" element={<Login />} />
+											<Route path="/connections" element={<AllRequests />} />
+											<Route path="/conn-requests" element={<AllRequests />} />
+											<Route path="/settings" element={<Settings />} />
+											<Route path="/new-image" element={<NewImage />} />
+											<Route path="/new-post" element={<NewPost />} />
+											<Route path="/categories" element={<Categories />} />
+											<Route
+												path="/category-feed/:category"
+												element={<CategoryFeed />}
+											/>
+											<Route path="/all-chats" element={<ChatList />} />
 
-										<Route
-											path="/chat/:targetUserId/:targetUserName"
-											element={<Chat />}
-										/>
-										<Route path="/profile" element={<Profile />} />
-									</Route>
-								</Routes>
+											<Route
+												path="/chat/:targetUserId/:targetUserName"
+												element={<Chat />}
+											/>
+											<Route path="/profile" element={<Profile />} />
+										</Route>
+									</Routes>
+								</ChatUnreadProvider>
 								{/* </BrowserRouter> */}
 							</div>
 						) : (

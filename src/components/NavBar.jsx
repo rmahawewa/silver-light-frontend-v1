@@ -18,6 +18,7 @@ import {
 	removeNotification,
 } from "../utils/notificationSlice";
 import PostCard from "./PostCard";
+import { useChatUnread } from "../context/ChatUnreadContext"; // 💡 Import the context hook
 // import { removeUser } from "../utils/userSlice";
 
 const NavBar = () => {
@@ -32,6 +33,7 @@ const NavBar = () => {
 	const [lastVisitedTime, setLastVisitedTime] = useState("");
 	const [reactionFor, setReactionFor] = useState("");
 	const [notificationImagePostId, setNotificationImagePostId] = useState("");
+	const { totalChatUnreadCount } = useChatUnread(); // 💡 Get the total count
 
 	const loggedInUsr = user?._id;
 
@@ -340,7 +342,12 @@ const NavBar = () => {
 									<Link to="/conn-requests">Conn requests</Link>
 								</li>
 								<li>
-									<Link to="/all-chats">All chats</Link>
+									<Link to="/all-chats">
+										All chats
+										<span className="badge badge-xs badge-primary indicator-item">
+											{totalChatUnreadCount} {/* 5  number of notifications */}
+										</span>
+									</Link>
 								</li>
 								<li>
 									<Link to="/settings">Settings</Link>
