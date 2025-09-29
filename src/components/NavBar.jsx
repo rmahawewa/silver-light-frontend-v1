@@ -344,9 +344,12 @@ const NavBar = () => {
 								<li>
 									<Link to="/all-chats">
 										All chats
-										<span className="badge badge-xs badge-primary indicator-item">
-											{totalChatUnreadCount} {/* 5  number of notifications */}
-										</span>
+										{totalChatUnreadCount > 0 && (
+											<span className="badge badge-xs badge-primary indicator-item">
+												{totalChatUnreadCount}{" "}
+												{/* 5  number of notifications */}
+											</span>
+										)}
 									</Link>
 								</li>
 								<li>
