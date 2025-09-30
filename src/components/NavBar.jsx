@@ -55,6 +55,10 @@ const NavBar = () => {
 		setImageId(value);
 	};
 
+	useEffect(() => {
+		console.log(notifications);
+	}, [notifications]);
+
 	const handleLogout = async () => {
 		try {
 			await axios.post(BASE_URL + "/logout", {}, { withCredentials: true });
@@ -126,7 +130,7 @@ const NavBar = () => {
 	return (
 		// The rest of your component remains the same
 		<>
-			<div className="navbar bg-base-100 shadow-sm">
+			<div className="navbar bg-base-100 shadow-sm fixed top-0 z-50">
 				<div className="flex-1">
 					<Link to="/" className="btn btn-ghost text-3xl">
 						miraculous
@@ -153,7 +157,7 @@ const NavBar = () => {
 										/>{" "}
 									</svg>
 									<span className="badge badge-xs badge-primary indicator-item">
-										{notifications?.length} {/* 5  number of notifications */}
+										{notifications?.length} {/* number of notifications */}
 									</span>
 								</div>
 							</button>

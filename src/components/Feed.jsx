@@ -61,7 +61,7 @@ const Feed = () => {
 		return <h1 className="flex justify-center my-10">Feed is empty</h1>;
 
 	return (
-		<>
+		<div className="py-8">
 			{feedData &&
 				feedData.length > 0 &&
 				feedData.map((img) => (
@@ -82,7 +82,7 @@ const Feed = () => {
 						<div className="divider w-2/3 mx-auto divider-neutral-content opacity-60"></div>
 					</div>
 				))}
-		</>
+		</div>
 	);
 };
 
