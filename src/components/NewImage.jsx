@@ -124,7 +124,7 @@ const NewImage = ({ imageId, handleImageIdChange }) => {
 				/>
 
 				<label className="label">Category</label>
-				<div className="join ">
+				<div className="join flex gap-3">
 					{/* <div> */}
 					{/* <label className="input validator join-item"> */}
 					<input
@@ -137,7 +137,7 @@ const NewImage = ({ imageId, handleImageIdChange }) => {
 					{/* </label> */}
 					<div className="validator-hint hidden">Enter valid category</div>
 					{/* </div> */}
-					<button className="btn btn-success" onClick={addCategory}>
+					<button className="btn btn-primary rounded-sm" onClick={addCategory}>
 						Add
 					</button>
 				</div>
@@ -163,7 +163,7 @@ const NewImage = ({ imageId, handleImageIdChange }) => {
 					onChange={(e) => setDescription(e.target.value)}
 				></textarea>
 				<button
-					className="btn btn-success"
+					className="btn btn-primary"
 					onClick={handleSubmit}
 					disabled={
 						!(

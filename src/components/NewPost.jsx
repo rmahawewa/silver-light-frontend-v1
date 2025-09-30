@@ -129,7 +129,7 @@ const NewPost = ({ post_id, handlePostidChange }) => {
 						</legend>
 						{images.length > 0 && (
 							<button
-								className="btn btn-success m-1"
+								className="btn btn-primary m-1"
 								onClick={() => setSelectImages(true)}
 							>
 								Select from uploaded images
@@ -146,7 +146,7 @@ const NewPost = ({ post_id, handlePostidChange }) => {
 						/>
 
 						<label className="label">Category</label>
-						<div className="join ">
+						<div className="join flex gap-3">
 							{/* <div> */}
 							{/* <label className="input validator join-item"> */}
 							<input
@@ -159,7 +159,10 @@ const NewPost = ({ post_id, handlePostidChange }) => {
 							{/* </label> */}
 							<div className="validator-hint hidden">Enter valid category</div>
 							{/* </div> */}
-							<button className="btn btn-success" onClick={addCategory}>
+							<button
+								className="btn btn-primary rounded-sm"
+								onClick={addCategory}
+							>
 								Add
 							</button>
 						</div>
@@ -185,7 +188,7 @@ const NewPost = ({ post_id, handlePostidChange }) => {
 							onChange={(e) => setDescription(e.target.value)}
 						></textarea>
 						<button
-							className="btn btn-success"
+							className="btn btn-primary"
 							onClick={() => handleSubmit()}
 							disabled={
 								!(
@@ -202,7 +205,7 @@ const NewPost = ({ post_id, handlePostidChange }) => {
 			) : (
 				<>
 					<button
-						className="btn btn-success my-15 mx-1"
+						className="btn btn-primary my-15 mx-1"
 						onClick={() => setSelectImages(false)}
 					>
 						Select images
