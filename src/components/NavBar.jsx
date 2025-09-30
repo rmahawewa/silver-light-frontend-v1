@@ -56,7 +56,7 @@ const NavBar = () => {
 	};
 
 	useEffect(() => {
-		console.log("notifications:" + notifications);
+		console.log(`notifications: ${JSON.stringify(notifications, null, 2)}`);
 	}, [notifications]);
 
 	const handleLogout = async () => {
