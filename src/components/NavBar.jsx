@@ -161,11 +161,11 @@ const NavBar = () => {
 									</span>
 								</div>
 							</button>
-							{/* <ul
+							<ul
 								tabIndex={0}
 								className="dropdown-content menu bg-base-100 rounded-box z-1 w-75 p-2 shadow-sm"
 							>
-								{notifications &&
+								{notifications.length > 0 &&
 									notifications?.map((notification) => (
 										<li key={notification?._id} className="bg-base-200 my-1">
 											{notification?.type == "reaction" && (
@@ -241,9 +241,9 @@ const NavBar = () => {
 												</>
 											)}
 											{/* {notification?.type == "message" && ()} */}
-							{/*</li>
+										</li>
 									))}
-							</ul> */}
+							</ul>
 						</div>
 						<div className="dropdown dropdown-hover  mx-10">
 							<button className="btn btn-ghost btn-circle">
