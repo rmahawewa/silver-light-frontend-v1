@@ -58,7 +58,7 @@ const Feed = () => {
 
 	if (!feedData) return null; // Use null for no content
 	if (feedData.length === 0 && (!postData || postData.length === 0))
-		return <h1 className="flex justify-center my-10">Feed is empty</h1>;
+		return <h1 className="flex justify-center my-16">Feed is empty</h1>;
 
 	return (
 		<div className="py-8">
