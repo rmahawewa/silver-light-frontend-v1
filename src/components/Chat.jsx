@@ -126,7 +126,7 @@ const Chat = () => {
 	};
 
 	return (
-		<div className="w-1/2 mx-auto border border-gray-600 m-5 h-[70vh] flex flex-col rounded">
+		<div className="w-1/2 mx-auto border border-gray-600 m-5 h-[70vh] flex flex-col rounded my-25">
 			<div className="p-5 border-b border-gray-600 rounded">
 				<h1>Chat</h1>
 				<h2>{targetUserName}</h2>

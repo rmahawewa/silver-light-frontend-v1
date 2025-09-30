@@ -58,6 +58,9 @@ const NavBar = () => {
 	useEffect(() => {
 		console.log(`notifications: ${JSON.stringify(notifications, null, 2)}`);
 	}, [notifications]);
+	useEffect(() => {
+		console.log(`totalChatUnreadCount: ${totalChatUnreadCount}`);
+	}, [totalChatUnreadCount]);
 
 	const handleLogout = async () => {
 		try {
@@ -138,6 +141,77 @@ const NavBar = () => {
 				</div>
 				{user && (
 					<div className="hidden flex-none lg:block">
+						<div className="dropdown dropdown-hover  mx-10">
+							<button className="btn btn-ghost btn-circle">
+								<div className="indicator">
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										strokeWidth={1.5}
+										stroke="currentColor"
+										className="size-6"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											d="M12 4.5v15m7.5-7.5h-15"
+										/>
+									</svg>
+								</div>
+							</button>
+							<ul
+								tabIndex={0}
+								className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+							>
+								<li>
+									<span
+										onClick={() => {
+											handleImageIdChange("");
+											setItemSwitch("image");
+											document.getElementById("my_modal_1").showModal();
+										}}
+									>
+										New image
+									</span>
+								</li>
+								<li>
+									<span
+										onClick={() => {
+											handlePostidChange("");
+											setItemSwitch("post");
+											document.getElementById("my_modal_1").showModal();
+										}}
+									>
+										New post
+									</span>
+								</li>
+							</ul>
+						</div>
+						<button
+							className="btn btn-ghost btn-circle tooltip tooltip-left tooltip-primary mx-10"
+							data-tip="Categories"
+							onClick={() => {
+								document.getElementById("modal_categories").showModal();
+							}}
+						>
+							<div className="indicator">
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									fill="none"
+									viewBox="0 0 24 24"
+									strokeWidth={1.5}
+									stroke="currentColor"
+									className="size-6"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+									/>
+								</svg>
+							</div>
+						</button>
 						<div className="dropdown dropdown-hover mx-10">
 							<button className="btn btn-ghost btn-circle">
 								<div className="indicator">
@@ -156,16 +230,18 @@ const NavBar = () => {
 											d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
 										/>{" "}
 									</svg>
-									<span className="badge badge-xs badge-primary indicator-item">
-										{notifications?.length} {/* number of notifications */}
-									</span>
+									{notifications?.length > 0 && (
+										<span className="badge badge-xs badge-primary indicator-item">
+											{notifications?.length} {/* number of notifications */}
+										</span>
+									)}
 								</div>
 							</button>
 							<ul
 								tabIndex={0}
 								className="dropdown-content menu bg-base-100 rounded-box z-1 w-75 p-2 shadow-sm"
 							>
-								{notifications.length > 0 &&
+								{notifications?.length > 0 &&
 									notifications?.map((notification) => (
 										<li key={notification?._id} className="bg-base-200 my-1">
 											{notification?.type == "reaction" && (
@@ -245,77 +321,61 @@ const NavBar = () => {
 									))}
 							</ul>
 						</div>
-						<div className="dropdown dropdown-hover  mx-10">
-							<button className="btn btn-ghost btn-circle">
-								<div className="indicator">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										fill="none"
-										viewBox="0 0 24 24"
-										strokeWidth={1.5}
-										stroke="currentColor"
-										className="size-6"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											d="M12 4.5v15m7.5-7.5h-15"
-										/>
-									</svg>
-								</div>
-							</button>
-							<ul
-								tabIndex={0}
-								className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
-							>
-								<li>
-									<span
-										onClick={() => {
-											handleImageIdChange("");
-											setItemSwitch("image");
-											document.getElementById("my_modal_1").showModal();
-										}}
-									>
-										New image
-									</span>
-								</li>
-								<li>
-									<span
-										onClick={() => {
-											handlePostidChange("");
-											setItemSwitch("post");
-											document.getElementById("my_modal_1").showModal();
-										}}
-									>
-										New post
-									</span>
-								</li>
-							</ul>
+						<div className="dropdown dropdown-hover mx-10">
+							<Link to="/all-chats">
+								<button className="btn btn-ghost btn-circle">
+									<div className="indicator">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											strokeWidth={1.5}
+											stroke="currentColor"
+											className="size-6"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												d="M8.625 9.75a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H8.25m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0H12m4.125 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 0 1 .778-.332 48.294 48.294 0 0 0 5.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0 0 12 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018Z"
+											/>
+										</svg>
+										{totalChatUnreadCount > 0 && (
+											<span className="badge badge-xs badge-primary indicator-item">
+												{totalChatUnreadCount} {/* number of chats */}
+											</span>
+										)}
+									</div>
+								</button>
+							</Link>
 						</div>
-						<button
-							className="btn btn-ghost btn-circle tooltip tooltip-left tooltip-primary mx-10"
-							data-tip="Categories"
-							onClick={() => {
-								document.getElementById("modal_categories").showModal();
-							}}
-						>
-							<div className="indicator">
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									fill="none"
-									viewBox="0 0 24 24"
-									strokeWidth={1.5}
-									stroke="currentColor"
-									className="size-6"
-								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
-									/>
-								</svg>
-							</div>
-						</button>
+						<div className="dropdown dropdown-hover mx-10">
+							<Link to="/connections">
+								<button className="btn btn-ghost btn-circle">
+									<div className="indicator">
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											strokeWidth={1.5}
+											stroke="currentColor"
+											className="size-6"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z"
+											/>
+										</svg>
+
+										{/* {totalChatUnreadCount > 0 && (
+											<span className="badge badge-xs badge-primary indicator-item">
+												{totalChatUnreadCount} 
+											</span>
+										)} */}
+									</div>
+								</button>
+							</Link>
+						</div>
 
 						<div className="dropdown dropdown-end  mx-10">
 							<div
@@ -337,25 +397,15 @@ const NavBar = () => {
 								<li>
 									<Link to="/profile">{user.userName}</Link>
 								</li>
-								<li>
+								{/* <li>
 									<Link to="/connections" className="justify-between">
 										Connections
 									</Link>
 								</li>
 								<li>
 									<Link to="/conn-requests">Conn requests</Link>
-								</li>
-								<li>
-									<Link to="/all-chats">
-										All chats
-										{totalChatUnreadCount > 0 && (
-											<span className="badge badge-xs badge-primary indicator-item">
-												{totalChatUnreadCount}{" "}
-												{/* 5  number of notifications */}
-											</span>
-										)}
-									</Link>
-								</li>
+								</li> */}
+
 								<li>
 									<Link to="/settings">Settings</Link>
 								</li>

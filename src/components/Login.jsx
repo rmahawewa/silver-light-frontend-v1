@@ -62,9 +62,9 @@ const Login = () => {
 	};
 
 	return (
-		<div className="flex justify-center py-12 ">
+		<div className="flex justify-center py-20 ">
 			<fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-				<legend className="fieldset-legend">
+				<legend className="fieldset-legend text-2xl font-bold px-2">
 					{isLoggingForm ? "Login" : "Sign up"}
 				</legend>
 				{!isLoggingForm && (
@@ -119,7 +119,7 @@ const Login = () => {
 
 				<button
 					onClick={isLoggingForm ? handleLogin : handleSignup}
-					className="btn btn-neutral mt-4"
+					className="btn btn-primary mt-4"
 				>
 					{isLoggingForm ? "Login" : "Sign up"}
 				</button>

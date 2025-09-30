@@ -55,7 +55,7 @@ const Connections = ({ status }) => {
 	}, []);
 
 	return (
-		<div className="w-full m-10">
+		<div className="w-full m-10 py-15">
 			<ul className="list bg-base-100 rounded-box shadow-md">
 				<legend className="fieldset-legend text-2xl font-bold px-2">
 					{status === "sent" ? "Pending connections" : "Connections"}
