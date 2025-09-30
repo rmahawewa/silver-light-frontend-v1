@@ -222,7 +222,7 @@ const Profile = () => {
 						></textarea>
 
 						<button
-							className="btn btn-neutral w-full mt-4"
+							className="btn btn-primary w-full mt-4"
 							onClick={saveDetails}
 						>
 							Save
@@ -268,7 +268,7 @@ const Profile = () => {
 						<p className="text-gray-700">{about}</p>
 
 						<button
-							className="btn btn-neutral w-full mt-4"
+							className="btn btn-primary w-full mt-4"
 							onClick={() => setIsEditable(true)}
 						>
 							Edit
