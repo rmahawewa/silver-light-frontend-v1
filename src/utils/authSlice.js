@@ -17,6 +17,9 @@ const authSlice = createSlice({
 			state.isLoggedIn = false;
 			state.user = null; // Clear user data on logout
 		},
+		changePhotoUrl: (state, action) => {
+			state.user.photoUrl = action.payload;
+		},
 	},
 });
 
