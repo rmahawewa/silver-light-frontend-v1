@@ -93,7 +93,7 @@ const Profile = () => {
 			});
 
 			if (res.data.data) {
-				dispatch(addUser(res.data.data));
+				dispatch(updateUser(res.data.data));
 				setIsEditable(false);
 			}
 		} catch (err) {
