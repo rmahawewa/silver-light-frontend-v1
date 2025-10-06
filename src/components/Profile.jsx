@@ -4,6 +4,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { addUser } from "../utils/userSlice";
 import { format } from "date-fns";
+import { updateUser } from "../utils/authSlice";
 
 const Profile = () => {
 	const [isEditable, setIsEditable] = useState(true);
@@ -22,6 +23,7 @@ const Profile = () => {
 	const [country, setCountry] = useState("");
 	const [reagion, setReagion] = useState("");
 	const [about, setAbout] = useState("");
+	const [showToast, setShowToast] = useState(false);
 
 	// State for file upload and errors
 	const [selectedFile, setSelectedFile] = useState(null);
@@ -49,6 +51,7 @@ const Profile = () => {
 
 	const handleFileChange = (event) => {
 		const file = event.target.files[0];
+		console.log(file);
 
 		if (file) {
 			if (!file.type.startsWith("image/")) {
@@ -56,6 +59,10 @@ const Profile = () => {
 				setSelectedFile(null);
 				return;
 			}
+			// const fileName = file.name;
+			// const fileNameWithoutSpaces = fileName.replaceAll(" ", "");
+			// file.name = fileNameWithoutSpaces;
+			// console.log(file);
 
 			setError("");
 			setSelectedFile(file);
@@ -95,6 +102,10 @@ const Profile = () => {
 			if (res.data.data) {
 				dispatch(updateUser(res.data.data));
 				setIsEditable(false);
+				setShowToast(true);
+				setTimeout(() => {
+					setShowToast(false);
+				}, 3000);
 			}
 		} catch (err) {
 			console.error(err);
@@ -103,180 +114,191 @@ const Profile = () => {
 	};
 
 	return (
-		<div className="flex justify-center p-4">
-			<fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-2xl border p-6">
-				<legend className="fieldset-legend text-2xl font-bold px-2">
-					{isEditable ? "Edit Profile Details" : "Profile Details"}
-				</legend>
+		<>
+			<div className="flex justify-center p-4">
+				<fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-full max-w-2xl border p-6">
+					<legend className="fieldset-legend text-2xl font-bold px-2">
+						{isEditable ? "Edit Profile Details" : "Profile Details"}
+					</legend>
 
-				{isEditable ? (
-					<div className="space-y-4">
-						<div className="w-32 h-32 my-5 mx-auto rounded-full overflow-hidden border-2 border-gray-300 shadow-md">
-							{photoUrl ? (
-								<img
-									src={photoUrl}
-									alt="User Profile"
-									className="w-full h-full object-cover"
-								/>
-							) : (
-								<div className="w-full h-full bg-gray-400 flex items-center justify-center text-gray-700">
-									No Image
+					{isEditable ? (
+						<div className="space-y-4">
+							<div className="w-32 h-32 my-5 mx-auto rounded-full overflow-hidden border-2 border-gray-300 shadow-md">
+								{photoUrl ? (
+									<img
+										src={photoUrl}
+										alt="User Profile"
+										className="w-full h-full object-cover"
+									/>
+								) : (
+									<div className="w-full h-full bg-gray-400 flex items-center justify-center text-gray-700">
+										No Image
+									</div>
+								)}
+							</div>
+
+							<div className="collapse bg-base-100 rounded-lg shadow-sm">
+								<input type="checkbox" className="min-h-0" />
+								<div className="collapse-title label font-semibold text-lg text-gray-700">
+									<label>Change Photo</label>
 								</div>
-							)}
-						</div>
-
-						<div className="collapse bg-base-100 rounded-lg shadow-sm">
-							<input type="checkbox" className="min-h-0" />
-							<div className="collapse-title label font-semibold text-lg text-gray-700">
-								<label>Change Photo</label>
+								<div className="collapse-content">
+									<input
+										type="file"
+										accept="image/*"
+										className="input file-input w-full"
+										onChange={(e) => handleFileChange(e)}
+									/>
+									{error && (
+										<p className="text-red-500 text-sm mt-2">{error}</p>
+									)}
+								</div>
 							</div>
-							<div className="collapse-content">
-								<input
-									type="file"
-									accept="image/*"
-									className="input file-input w-full"
-									onChange={(e) => handleFileChange(e)}
-								/>
-								{error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
+							<label className="label">First name</label>
+							<input
+								type="text"
+								className="input w-full"
+								placeholder="First name"
+								value={firstName}
+								onChange={(e) => setFirstName(e.target.value)}
+							/>
+
+							<label className="label">Last name</label>
+							<input
+								type="text"
+								className="input w-full"
+								placeholder="Last name"
+								value={lastName}
+								onChange={(e) => setLastName(e.target.value)}
+							/>
+
+							<label className="label">User name</label>
+							<input
+								type="text"
+								className="input w-full"
+								placeholder="User name"
+								value={userName}
+								onChange={(e) => setUserName(e.target.value)}
+							/>
+
+							<label className="label">Birthday</label>
+							<input
+								type="date"
+								className="input w-full"
+								placeholder="Birthday"
+								value={birthday}
+								onChange={(e) => setBirthday(e.target.value)}
+							/>
+
+							<label className="label">Email</label>
+							<input
+								type="email"
+								className="input w-full"
+								placeholder="Email"
+								value={email}
+								onChange={(e) => setEmail(e.target.value)}
+							/>
+
+							<label className="label">Gender</label>
+							<input
+								type="text"
+								className="input w-full"
+								placeholder="Gender"
+								value={gender}
+								onChange={(e) => setGender(e.target.value)}
+							/>
+
+							<label className="label">Country</label>
+							<input
+								type="text"
+								className="input w-full"
+								placeholder="Country"
+								value={country}
+								onChange={(e) => setCountry(e.target.value)}
+							/>
+
+							<label className="label">Region</label>
+							<input
+								type="text"
+								className="input w-full"
+								placeholder="Region"
+								value={reagion}
+								onChange={(e) => setReagion(e.target.value)}
+							/>
+
+							<label className="label">About</label>
+							<textarea
+								className="textarea w-full"
+								placeholder="About"
+								value={about}
+								onChange={(e) => setAbout(e.target.value)}
+							></textarea>
+
+							<button
+								className="btn btn-primary w-full mt-4"
+								onClick={saveDetails}
+							>
+								Save
+							</button>
+						</div>
+					) : (
+						<div className="space-y-4">
+							<div className="w-32 h-32 my-5 mx-auto rounded-full overflow-hidden border-2 border-gray-300 shadow-md">
+								{photoUrl && (
+									<img
+										src={photoUrl}
+										alt="User Profile"
+										className="w-full h-full object-cover"
+									/>
+								)}
 							</div>
+
+							<label className="label font-semibold">First name</label>
+							<p className="text-gray-700">{firstName}</p>
+
+							<label className="label font-semibold">Last name</label>
+							<p className="text-gray-700">{lastName}</p>
+
+							<label className="label font-semibold">User name</label>
+							<p className="text-gray-700">{userName}</p>
+
+							<label className="label font-semibold">Birthday</label>
+							<p className="text-gray-700">{birthday}</p>
+
+							<label className="label font-semibold">Email</label>
+							<p className="text-gray-700">{email}</p>
+
+							<label className="label font-semibold">Gender</label>
+							<p className="text-gray-700">{gender}</p>
+
+							<label className="label font-semibold">Country</label>
+							<p className="text-gray-700">{country}</p>
+
+							<label className="label font-semibold">Region</label>
+							<p className="text-gray-700">{reagion}</p>
+
+							<label className="label font-semibold">About</label>
+							<p className="text-gray-700">{about}</p>
+
+							<button
+								className="btn btn-primary w-full mt-4"
+								onClick={() => setIsEditable(true)}
+							>
+								Edit
+							</button>
 						</div>
-
-						<label className="label">First name</label>
-						<input
-							type="text"
-							className="input w-full"
-							placeholder="First name"
-							value={firstName}
-							onChange={(e) => setFirstName(e.target.value)}
-						/>
-
-						<label className="label">Last name</label>
-						<input
-							type="text"
-							className="input w-full"
-							placeholder="Last name"
-							value={lastName}
-							onChange={(e) => setLastName(e.target.value)}
-						/>
-
-						<label className="label">User name</label>
-						<input
-							type="text"
-							className="input w-full"
-							placeholder="User name"
-							value={userName}
-							onChange={(e) => setUserName(e.target.value)}
-						/>
-
-						<label className="label">Birthday</label>
-						<input
-							type="date"
-							className="input w-full"
-							placeholder="Birthday"
-							value={birthday}
-							onChange={(e) => setBirthday(e.target.value)}
-						/>
-
-						<label className="label">Email</label>
-						<input
-							type="email"
-							className="input w-full"
-							placeholder="Email"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-						/>
-
-						<label className="label">Gender</label>
-						<input
-							type="text"
-							className="input w-full"
-							placeholder="Gender"
-							value={gender}
-							onChange={(e) => setGender(e.target.value)}
-						/>
-
-						<label className="label">Country</label>
-						<input
-							type="text"
-							className="input w-full"
-							placeholder="Country"
-							value={country}
-							onChange={(e) => setCountry(e.target.value)}
-						/>
-
-						<label className="label">Region</label>
-						<input
-							type="text"
-							className="input w-full"
-							placeholder="Region"
-							value={reagion}
-							onChange={(e) => setReagion(e.target.value)}
-						/>
-
-						<label className="label">About</label>
-						<textarea
-							className="textarea w-full"
-							placeholder="About"
-							value={about}
-							onChange={(e) => setAbout(e.target.value)}
-						></textarea>
-
-						<button
-							className="btn btn-primary w-full mt-4"
-							onClick={saveDetails}
-						>
-							Save
-						</button>
+					)}
+				</fieldset>
+			</div>
+			{showToast && (
+				<div className="toast">
+					<div className="alert alert-success">
+						<span>Profile saved successfully</span>
 					</div>
-				) : (
-					<div className="space-y-4">
-						<div className="w-32 h-32 my-5 mx-auto rounded-full overflow-hidden border-2 border-gray-300 shadow-md">
-							{photoUrl && (
-								<img
-									src={photoUrl}
-									alt="User Profile"
-									className="w-full h-full object-cover"
-								/>
-							)}
-						</div>
-
-						<label className="label font-semibold">First name</label>
-						<p className="text-gray-700">{firstName}</p>
-
-						<label className="label font-semibold">Last name</label>
-						<p className="text-gray-700">{lastName}</p>
-
-						<label className="label font-semibold">User name</label>
-						<p className="text-gray-700">{userName}</p>
-
-						<label className="label font-semibold">Birthday</label>
-						<p className="text-gray-700">{birthday}</p>
-
-						<label className="label font-semibold">Email</label>
-						<p className="text-gray-700">{email}</p>
-
-						<label className="label font-semibold">Gender</label>
-						<p className="text-gray-700">{gender}</p>
-
-						<label className="label font-semibold">Country</label>
-						<p className="text-gray-700">{country}</p>
-
-						<label className="label font-semibold">Region</label>
-						<p className="text-gray-700">{reagion}</p>
-
-						<label className="label font-semibold">About</label>
-						<p className="text-gray-700">{about}</p>
-
-						<button
-							className="btn btn-primary w-full mt-4"
-							onClick={() => setIsEditable(true)}
-						>
-							Edit
-						</button>
-					</div>
-				)}
-			</fieldset>
-		</div>
+				</div>
+			)}
+		</>
 	);
 };
 
