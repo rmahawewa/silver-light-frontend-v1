@@ -135,8 +135,8 @@ const NavBar = () => {
 		<>
 			<div className="navbar bg-base-100 shadow-sm fixed top-0 z-50">
 				<div className="flex-1">
-					<Link to="/" className="btn btn-ghost text-3xl">
-						miraculous
+					<Link to="/" className="btn btn-ghost text-3xl ">
+						<div className="text-primary">miraculous</div>
 					</Link>
 				</div>
 				{user && (
